@@ -1,0 +1,54 @@
+name: GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Detect Node version from .nvmrc
+        id: node_version
+        run: echo "::set-output name=nvmrc::$(cat .nvmrc)"
+      - name: Install Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ steps.node_version.outputs.nvmrc }}
+      - uses: actions/cache@v1
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - name: Install dependencies and Puppeteer
+        run: |
+          npm ci
+          sudo apt-get install libgbm-dev
+          npm i puppeteer --no-save
+
+      - name: Build Marp slide deck
+        run: |
+          npm run build
+        env:
+          URL: https://${{ github.event.repository.owner.name }}.github.io/${{ github.event.repository.name }}
+          LANG: en-US
+      - name: Deploy to lectures
+        uses: JamesIves/github-pages-deploy-action@releases/v3
+        with:
+          branch: gh-pages
+          folder: lectures
+          target_folder: modules/lectures/_posts
+          clean: off
+      - name: Deploy to slides
+        uses: JamesIves/github-pages-deploy-action@releases/v3
+        with:
+          branch: gh-pages
+          folder: slides-html
+          target_folder: files
+          clean: off
+
+
+
