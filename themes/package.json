@@ -1,0 +1,20 @@
+{
+  "name": "marp-cli-example",
+  "version": "0.0.0",
+  "author": "Yuki Hattori <yukihattori1116@gmail.com>",
+  "license": "WTFPL",
+  "private": true,
+  "scripts": {
+    "build": "rimraf dist && npm run -s deck2 && npm run -s deck",
+    "deck": "marp --no-stdin concurrency1-slides.md -o dist/index.html && cpy \"assets/**/*\" dist/assets",
+    "deck2": "marp --no-stdin concurrency2-slides.md -o dist/two.html && cpy \"assets/**/*\" dist/assets",
+    "now-build": "npm run -s deck",
+    "og-image": "marp concurrency1-slides.md -o dist/og-image.jpg",
+    "start": "marp -ps ."
+  },
+  "devDependencies": {
+    "@marp-team/marp-cli": "^0.23.2",
+    "cpy-cli": "^3.1.1",
+    "rimraf": "^3.0.2"
+  }
+}

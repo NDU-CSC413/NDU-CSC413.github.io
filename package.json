@@ -1,0 +1,16 @@
+{
+  "name": "marp-cli-example",
+  "version": "0.0.0",
+  "author": "Yuki Hattori <yukihattori1116@gmail.com>",
+  "license": "WTFPL",
+  "private": true,
+  "scripts": {
+    "build": "rimraf slides-html && npm run -s deck",
+    "deck": "marp --no-stdin -I slides -o slides-html "
+  },
+  "devDependencies": {
+    "@marp-team/marp-cli": "^0.23.2",
+    "cpy-cli": "^3.1.1",
+    "rimraf": "^3.0.2"
+  }
+}
