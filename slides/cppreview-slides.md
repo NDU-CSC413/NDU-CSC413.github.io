@@ -350,12 +350,10 @@ You can see the errors [here](https://godbolt.org/z/GY564h)
 
 # Rvalue reference and move semantics
 
-- Since C++11 there is a new type of references called **rvalue** references.
-- The variable _res_ below extends the lifetime of the temporary object created by the ```RT()``` function.  
-- To see that consider when the destructor is called in the following code
+- C++11 introduced **rvalue** references. Variable _res_ below extends the lifetime of the temporary object created by the ```RT()``` function.  
+- Consider when the destructor is called below
 
 ```cpp
-#include <iostream>
 struct Test {
   int _x;
   Test(int x=0):_x(x){}
@@ -371,14 +369,12 @@ Test&& res=RT(8);
 std::cout<<"creating 7\n";
 RT(7);
 std::cout<<" done\n";
-
 }
 ```
 
-
-You can run the above code [here](https://godbolt.org/z/4EacM3)
-
 ---
+
+-You can run the above code [here](https://godbolt.org/z/4EacM3)
 
 - __Note__ that  when an rvalue reference  is used, it is used as a lvalue reference. 
 - This is called **move semantics is not passed through** . 
@@ -411,10 +407,6 @@ void doit(std::string&& s){
 Move semantics allows us to transfer ownership of resources.
 
 ```cpp
-#include <iostream>
-#include <string>
-#include <vector>
-
 int main(){
 std::string s{"hello there"};
 std::string ts=std::move(s);
@@ -438,7 +430,6 @@ std::cout<<std::endl;
 
 you can try it [here](https://godbolt.org/z/79a6zY). We illustrate further with our own, very simple, container.
 ```cpp
-#include <iostream>
 struct Container {
     int* p = nullptr;
     int _size;
@@ -503,21 +494,14 @@ You can try it [here](https://godbolt.org/z/1Gnvhb)
 - (in g++ or clang++ specify -fno-elide-constructors to skip optimization)
 
 ```cpp
-#include <iostream>
 struct Test {
-        Test(){
-          std::cout<<"ctor\n";
-        }
+        Test(){ std::cout<<"ctor\n";}
         Test(const Test& rhs){
           std::cout<<"copy ctor\n";
         }
-        ~Test(){
-          std::cout<<"dtor\n";
-        }
+        ~Test(){ std::cout<<"dtor\n";}
 };
-Test retTest(){
-        return Test();
-}
+Test retTest(){return Test();}
 int main(){
   Test t=retTest();
   std::cout<<"temporary returned by refTest is destroyed\n";
@@ -595,7 +579,7 @@ int main(){
 
 ---
 
-The __new__ operator can be used with any object. In particular, we can use it to create an array dynamically
+The __new__ expression can be used with any object. In particular, we can use it to create an array dynamically
 ```cpp
 int main(){
     const int n=8;
@@ -606,10 +590,6 @@ int main(){
      */
     for(int i=0,*q=p;i<n;++i,++q)
          *q=i;
-     /* we use it as an array
-      * good thing we kept the
-      * original p
-      */
     for(int i=0;i<n;++i)
       std::cout<<p[i]<<",";
     std::cout<<"\n";
@@ -623,7 +603,6 @@ int main(){
 As we mentioned before we can use a pointer to any type.
 
 ```cpp
-#include <iostream>
 class Test {
 int _x,_y;
 public:
@@ -646,7 +625,11 @@ You can try the above code [here](https://godbolt.org/z/zMach4)
 
 ## new, malloc, operator new
 
-A __new__ expression is used both for dynamically allocating memory(on the heap) __and__ calling the constructor of an object. The function __operator new__ allocates memory __only__. In that sense it is similar to malloc in C. Unless you are designing your own container you __almost never__ need to use __operator new__. Usually it is used to _place_ the constructed object at a _preallocated_ place.
+- A __new__ expression is used both for dynamically allocating memory(on the heap) __and__ calling the constructor of an object. 
+- The function __operator new__ allocates memory __only__. 
+- In that sense it is similar to malloc in C. 
+- Unless you are designing your own container you __almost never__ need to use __operator new__. 
+- Usually it is used to _place_ the constructed object at a _preallocated_ place.
 
 
 ---
@@ -654,7 +637,6 @@ A __new__ expression is used both for dynamically allocating memory(on the heap)
 Example
 
 ```cpp
-#include <iostream>
 #include <new>
 struct Test {
  int _x,_y;
@@ -673,7 +655,8 @@ You can run the code [here](https://godbolt.org/z/faYq3Y).
 ---
 
 
-We can override the implementation of __operator new__ and __operator delete__. As can be seen below new and delete are the C++ "versions" of C malloc and free.
+- We can override the implementation of __operator new__ and __operator delete__. 
+- As can be seen below new and delete are the C++ "versions" of C malloc and free.
 
 ```cpp
 #include <iostream>
@@ -709,14 +692,19 @@ int main(){
     operator delete(p);
 }
 ```
-https://godbolt.org/z/orqKPq
+You can try the above [here](https://godbolt.org/z/orqKPq)
 
 ---
 
 
 ## Smart pointers
 
-While pointers provide flexibility they can cause a variety of problems. One of the problems is shared ownership of a resource. As discussed before, in many situations a pointer variable contains the address of a dynamically allocated memory. We also saw that, in order not to have memory leaks, we need to free the allocated memory when done. This particular problem occurs when two or more pointer variables have the address of the same dynamically allocated resource. In such a situation we either try to free the memory multiple times, access a resource that no longer exists , or forget to release the memory which causes memory leaks.
+- pointers provide flexibility but they can cause a variety of problems. 
+- One of the problems is shared ownership of a resource. 
+- In order not to have memory leaks, we need to free the allocated memory when done.
+-  This particular problem occurs when two or more pointer variables have the address of the same dynamically allocated resource. 
+- In such a situation we either try to free the memory multiple times, access a resource that no longer exists 
+- or forget to release the memory which causes memory leaks.
 
 ---
 
@@ -764,8 +752,11 @@ int main() {
 
 ---
 
-In the above code, the class ```Leaker``` allocates 1MB of memory. It has a choice, either it __does not free__ the allocated memory, as we did in the example above, or frees it in the destructor with the danger that ```p``` will also free it. Using the performance profiler in VS (Debug->Performance profiler) we see that the above code uses about 200MB
-which makes sense since each iteration allocates 4MB.
+- the class ```Leaker``` allocates 1MB of memory. 
+- It has a choice, either it __does not free__ the allocated memory, as we did in the example above
+- or frees it in the destructor with the danger that ```p``` will also free it. 
+- Using the performance profiler in VS (Debug->Performance profiler) we see that the above code uses about 200MB
+- which makes sense since each iteration allocates 4MB.
 
 
 ---
@@ -786,8 +777,11 @@ This works provided the user (i.e. the code calling ```int p*=x.value()```) does
 ---
 
 
-To avoid problems like these we use either std::unique_ptr<T> or std::shared_ptr<T>. The first enforces __exclusive__
-ownership whereas the second allows __shared__ ownership. We start with an example of the second.
+- To avoid problems like these we use either ```std::unique_ptr<T>``` or ```std::shared_ptr<T>```.
+- The first enforces __exclusive__
+ownership whereas 
+- the second allows __shared__ ownership. 
+- We start with an example of the second.
 
 ---
 
@@ -841,19 +835,30 @@ int main(){
 
 ---
 
-First, there is no __delete__ of a ```std::shared_ptr``` because it is automatically destroyed (i.e. dtor is called) when it goes out of scope __and__ it frees the resource it is pointing to __only if__ it is the __last__ shared_ptr copy.  Second, it is used exactly like pointers.
+- there is no __delete__ of a ```std::shared_ptr``` - - it is automatically destroyed (i.e. dtor is called) when it goes out of scope __and__
+-  it frees the resource it is pointing to __only if__ it is the __last__ shared_ptr copy.  
+- it is used exactly like pointers.
 
 ---
 
-In the example above there are three ```std::shared_ptr```, all pointing to the resource allocated by the ```Shared_Owner``` object _x_. Inside the block two ```std::shared_ptr``` objects are created _p_ and _q_, both pointing to the memory block allocated by _x_. When they go out of scope, and therefore they are destroyed,  the allocated memory is not freed, the number of copies is just decremented.
-Now when _x_ goes out of scope, it is the last shared_ptr pointing to the resource and therefore it frees it.
-You can try the above example here [here](https://godbolt.org/z/c9159K).
+- In the example above there are three ```std::shared_ptr```,
+- all pointing to the resource allocated by the ```Shared_Owner``` object _x_. 
+- Inside the block two ```std::shared_ptr``` objects are created _p_ and _q_, 
+- both pointing to the memory block allocated by _x_. - When they go out of scope, and therefore they are destroyed,
+- the allocated memory is not freed, the number of copies is just decremented.
+- when _x_ goes out of scope, it is the last shared_ptr pointing to the resource 
+-  therefore it frees it.
+-You can try the above example here [here](https://godbolt.org/z/c9159K).
 
 ---
 
 
-The ```std::unique_ptr<T>``` is similar except it enforces __exclusive__ ownership. Below is a similar  example illustrating the memory automatically released by the ```std::unique_ptr``` when it is destroyed. Note the two changes due to noncopiable nature of ```std::unique_ptr```. First, in function ```mod``` the ```std::unique_ptr``` must be passed and returned by reference because we cannot make a copy. Also
-in the statement ```    std::unique_ptr<int> t = std::move(mod(p->res));``` the resource held by _p_ is transferred to _t_.
+- The ```std::unique_ptr<T>``` is similar except it enforces __exclusive__ ownership. 
+- Below is a similar  example illustrating the memory automatically released by the ```std::unique_ptr``` when it is destroyed. 
+- Note the two changes due to noncopiable nature of ```std::unique_ptr```. 
+- First, in function ```mod``` the ```std::unique_ptr``` must be passed and returned by reference
+- we cannot make a copy. 
+- in the statement ```    std::unique_ptr<int> t = std::move(mod(p->res));``` the resource held by _p_ is transferred to _t_.
 
 ---
 
@@ -901,8 +906,9 @@ int main(){
 
 ---
 
-Using the performance profiler in VS (Debug->Performance profiler) we see that the above code uses only 4MB
-which means each iteration  4MB are allocated and then freed.
+- Using the performance profiler in VS (Debug->Performance profiler) 
+- the above code uses only 4MB
+- which means each iteration  4MB are allocated and then freed.
 
 ---
 
