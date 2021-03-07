@@ -601,9 +601,9 @@ we remove the last line that prints the value of ```result``` or not.
 
 The reason is that when we don't print (i.e. not use) the variable result the compiler removes it from the code. This can be seen below in the assembly output between the two calls to ```now()```.
 
-![Figure 1](/img/asm2.jpg)
+![Figure 1](figs/asm2.jpg)
 
-![Figure 2](/img/asm1.jpg )
+![Figure 2](figs/asm1.jpg )
 
 Figure 1  shows the assembly output when the last line __is not included__. Note the absence of instructions between the two calls to ```now()```.
 
