@@ -348,12 +348,10 @@ item ctor
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="25">
 <h1>Rvalue reference and move semantics</h1>
 <ul>
-<li>Since C++11 there is a new type of references called <strong>rvalue</strong> references.</li>
-<li>The variable <em>res</em> below extends the lifetime of the temporary object created by the <code>RT()</code> function.</li>
-<li>To see that consider when the destructor is called in the following code</li>
+<li>C++11 introduced <strong>rvalue</strong> references. Variable <em>res</em> below extends the lifetime of the temporary object created by the <code>RT()</code> function.</li>
+<li>Consider when the destructor is called below</li>
 </ul>
-<pre><code class="language-cpp"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span>
-<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Test</span> {</span>
+<pre><code class="language-cpp"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Test</span> {</span>
   <span class="hljs-keyword">int</span> _x;
   Test(<span class="hljs-keyword">int</span> x=<span class="hljs-number">0</span>):_x(x){}
   ~Test(){
@@ -368,12 +366,11 @@ Test&amp;&amp; res=RT(<span class="hljs-number">8</span>);
 <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span>&lt;&lt;<span class="hljs-string">&quot;creating 7\n&quot;</span>;
 RT(<span class="hljs-number">7</span>);
 <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span>&lt;&lt;<span class="hljs-string">&quot; done\n&quot;</span>;
-
 }
 </span></span></foreignObject></svg></code></pre>
-<p>You can run the above code <a href="https://godbolt.org/z/4EacM3">here</a></p>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="26">
+<p>-You can run the above code <a href="https://godbolt.org/z/4EacM3">here</a></p>
 <ul>
 <li><strong>Note</strong> that  when an rvalue reference  is used, it is used as a lvalue reference.</li>
 <li>This is called <strong>move semantics is not passed through</strong> .</li>
@@ -399,11 +396,7 @@ RT(<span class="hljs-number">7</span>);
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="28">
 <p>Move semantics allows us to transfer ownership of resources.</p>
-<pre><code class="language-cpp"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span>
-<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;string&gt;</span></span>
-<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;vector&gt;</span></span>
-
-<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>{
+<pre><code class="language-cpp"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>{
 <span class="hljs-built_in">std</span>::<span class="hljs-built_in">string</span> s{<span class="hljs-string">&quot;hello there&quot;</span>};
 <span class="hljs-built_in">std</span>::<span class="hljs-built_in">string</span> ts=<span class="hljs-built_in">std</span>::move(s);
 <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span>&lt;&lt;<span class="hljs-string">&quot;the string s is &quot;</span>&lt;&lt;s&lt;&lt;<span class="hljs-string">&quot;\n&quot;</span>;
@@ -423,8 +416,7 @@ RT(<span class="hljs-number">7</span>);
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="29">
 <p>you can try it <a href="https://godbolt.org/z/79a6zY">here</a>. We illustrate further with our own, very simple, container.</p>
-<pre><code class="language-cpp"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span>
-<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Container</span> {</span>
+<pre><code class="language-cpp"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Container</span> {</span>
     <span class="hljs-keyword">int</span>* p = <span class="hljs-literal">nullptr</span>;
     <span class="hljs-keyword">int</span> _size;
     Container(<span class="hljs-keyword">int</span> size) :_size(size), p(<span class="hljs-keyword">new</span> <span class="hljs-keyword">int</span>[size] {}) {}
@@ -485,21 +477,14 @@ RT(<span class="hljs-number">7</span>);
 <li>unless the compiler performs return value optimization (rvo) the following occurs</li>
 <li>(in g++ or clang++ specify -fno-elide-constructors to skip optimization)</li>
 </ul>
-<pre><code class="language-cpp"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span>
-<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Test</span> {</span>
-        Test(){
-          <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span>&lt;&lt;<span class="hljs-string">&quot;ctor\n&quot;</span>;
-        }
+<pre><code class="language-cpp"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Test</span> {</span>
+        Test(){ <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span>&lt;&lt;<span class="hljs-string">&quot;ctor\n&quot;</span>;}
         Test(<span class="hljs-keyword">const</span> Test&amp; rhs){
           <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span>&lt;&lt;<span class="hljs-string">&quot;copy ctor\n&quot;</span>;
         }
-        ~Test(){
-          <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span>&lt;&lt;<span class="hljs-string">&quot;dtor\n&quot;</span>;
-        }
+        ~Test(){ <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span>&lt;&lt;<span class="hljs-string">&quot;dtor\n&quot;</span>;}
 };
-<span class="hljs-function">Test <span class="hljs-title">retTest</span><span class="hljs-params">()</span></span>{
-        <span class="hljs-keyword">return</span> Test();
-}
+<span class="hljs-function">Test <span class="hljs-title">retTest</span><span class="hljs-params">()</span></span>{<span class="hljs-keyword">return</span> Test();}
 <span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>{
   Test t=retTest();
   <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span>&lt;&lt;<span class="hljs-string">&quot;temporary returned by refTest is destroyed\n&quot;</span>;
@@ -567,7 +552,7 @@ p=&amp;y;<span class="hljs-comment">//p now stores the address of y</span>
 </span></span></foreignObject></svg></code></pre>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="37">
-<p>The <strong>new</strong> operator can be used with any object. In particular, we can use it to create an array dynamically</p>
+<p>The <strong>new</strong> expression can be used with any object. In particular, we can use it to create an array dynamically</p>
 <pre><code class="language-cpp"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>{
     <span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> n=<span class="hljs-number">8</span>;
     <span class="hljs-keyword">int</span>* p=<span class="hljs-keyword">new</span> <span class="hljs-keyword">int</span>[n];<span class="hljs-comment">//Note the difference from int(n)</span>
@@ -577,10 +562,6 @@ p=&amp;y;<span class="hljs-comment">//p now stores the address of y</span>
      */</span>
     <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i=<span class="hljs-number">0</span>,*q=p;i&lt;n;++i,++q)
          *q=i;
-     <span class="hljs-comment">/* we use it as an array
-      * good thing we kept the
-      * original p
-      */</span>
     <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i=<span class="hljs-number">0</span>;i&lt;n;++i)
       <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span>&lt;&lt;p[i]&lt;&lt;<span class="hljs-string">&quot;,&quot;</span>;
     <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span>&lt;&lt;<span class="hljs-string">&quot;\n&quot;</span>;
@@ -591,8 +572,7 @@ p=&amp;y;<span class="hljs-comment">//p now stores the address of y</span>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="38">
 <p>As we mentioned before we can use a pointer to any type.</p>
-<pre><code class="language-cpp"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span>
-<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Test</span> {</span>
+<pre><code class="language-cpp"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Test</span> {</span>
 <span class="hljs-keyword">int</span> _x,_y;
 <span class="hljs-keyword">public</span>:
  Test(<span class="hljs-keyword">int</span> x,<span class="hljs-keyword">int</span> y):_x(x),_y(y){}
@@ -612,12 +592,17 @@ p=&amp;y;<span class="hljs-comment">//p now stores the address of y</span>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="39">
 <h2>new, malloc, operator new</h2>
-<p>A <strong>new</strong> expression is used both for dynamically allocating memory(on the heap) <strong>and</strong> calling the constructor of an object. The function <strong>operator new</strong> allocates memory <strong>only</strong>. In that sense it is similar to malloc in C. Unless you are designing your own container you <strong>almost never</strong> need to use <strong>operator new</strong>. Usually it is used to <em>place</em> the constructed object at a <em>preallocated</em> place.</p>
+<ul>
+<li>A <strong>new</strong> expression is used both for dynamically allocating memory(on the heap) <strong>and</strong> calling the constructor of an object.</li>
+<li>The function <strong>operator new</strong> allocates memory <strong>only</strong>.</li>
+<li>In that sense it is similar to malloc in C.</li>
+<li>Unless you are designing your own container you <strong>almost never</strong> need to use <strong>operator new</strong>.</li>
+<li>Usually it is used to <em>place</em> the constructed object at a <em>preallocated</em> place.</li>
+</ul>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="40">
 <p>Example</p>
-<pre><code class="language-cpp"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span>
-<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;new&gt;</span></span>
+<pre><code class="language-cpp"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;new&gt;</span></span>
 <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Test</span> {</span>
  <span class="hljs-keyword">int</span> _x,_y;
  Test(<span class="hljs-keyword">int</span> x,<span class="hljs-keyword">int</span> y):_x(x),_y(y){<span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span>&lt;&lt;<span class="hljs-string">&quot;ctor\n&quot;</span>;}
@@ -633,7 +618,10 @@ Test* t=<span class="hljs-keyword">new</span> (p) Test{<span class="hljs-number"
 <p>You can run the code <a href="https://godbolt.org/z/faYq3Y">here</a>.</p>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="41">
-<p>We can override the implementation of <strong>operator new</strong> and <strong>operator delete</strong>. As can be seen below new and delete are the C++ &quot;versions&quot; of C malloc and free.</p>
+<ul>
+<li>We can override the implementation of <strong>operator new</strong> and <strong>operator delete</strong>.</li>
+<li>As can be seen below new and delete are the C++ &quot;versions&quot; of C malloc and free.</li>
+</ul>
 <pre><code class="language-cpp"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span>
 <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Test</span> {</span>
 <span class="hljs-keyword">int</span> _x,_y;
@@ -665,11 +653,18 @@ Test* t=<span class="hljs-keyword">new</span> (p) Test{<span class="hljs-number"
     <span class="hljs-function"><span class="hljs-keyword">operator</span> <span class="hljs-title">delete</span><span class="hljs-params">(p)</span></span>;
 }
 </span></span></foreignObject></svg></code></pre>
-<p><a href="https://godbolt.org/z/orqKPq">https://godbolt.org/z/orqKPq</a></p>
+<p>You can try the above <a href="https://godbolt.org/z/orqKPq">here</a></p>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="43">
 <h2>Smart pointers</h2>
-<p>While pointers provide flexibility they can cause a variety of problems. One of the problems is shared ownership of a resource. As discussed before, in many situations a pointer variable contains the address of a dynamically allocated memory. We also saw that, in order not to have memory leaks, we need to free the allocated memory when done. This particular problem occurs when two or more pointer variables have the address of the same dynamically allocated resource. In such a situation we either try to free the memory multiple times, access a resource that no longer exists , or forget to release the memory which causes memory leaks.</p>
+<ul>
+<li>pointers provide flexibility but they can cause a variety of problems.</li>
+<li>One of the problems is shared ownership of a resource.</li>
+<li>In order not to have memory leaks, we need to free the allocated memory when done.</li>
+<li>This particular problem occurs when two or more pointer variables have the address of the same dynamically allocated resource.</li>
+<li>In such a situation we either try to free the memory multiple times, access a resource that no longer exists</li>
+<li>or forget to release the memory which causes memory leaks.</li>
+</ul>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="44">
 <p>We illustrate with the following simple example.</p>
@@ -711,8 +706,13 @@ Test* t=<span class="hljs-keyword">new</span> (p) Test{<span class="hljs-number"
 </span></span></foreignObject></svg></code></pre>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="46">
-<p>In the above code, the class <code>Leaker</code> allocates 1MB of memory. It has a choice, either it <strong>does not free</strong> the allocated memory, as we did in the example above, or frees it in the destructor with the danger that <code>p</code> will also free it. Using the performance profiler in VS (Debug-&gt;Performance profiler) we see that the above code uses about 200MB<br />
-which makes sense since each iteration allocates 4MB.</p>
+<ul>
+<li>the class <code>Leaker</code> allocates 1MB of memory.</li>
+<li>It has a choice, either it <strong>does not free</strong> the allocated memory, as we did in the example above</li>
+<li>or frees it in the destructor with the danger that <code>p</code> will also free it.</li>
+<li>Using the performance profiler in VS (Debug-&gt;Performance profiler) we see that the above code uses about 200MB</li>
+<li>which makes sense since each iteration allocates 4MB.</li>
+</ul>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="47">
 <p><img src="figs/large_memory.png" alt="Figure 1" /></p>
@@ -726,8 +726,13 @@ which makes sense since each iteration allocates 4MB.</p>
 <p>This works provided the user (i.e. the code calling <code>int p*=x.value()</code>) does not execute <code>delete p;</code> which crashes the program. You can try that scenario <a href="https://godbolt.org/z/WT7rjx">here</a></p>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="49">
-<p>To avoid problems like these we use either std::unique_ptr&lt;T&gt; or std::shared_ptr&lt;T&gt;. The first enforces <strong>exclusive</strong><br />
-ownership whereas the second allows <strong>shared</strong> ownership. We start with an example of the second.</p>
+<ul>
+<li>To avoid problems like these we use either <code>std::unique_ptr&lt;T&gt;</code> or <code>std::shared_ptr&lt;T&gt;</code>.</li>
+<li>The first enforces <strong>exclusive</strong><br />
+ownership whereas</li>
+<li>the second allows <strong>shared</strong> ownership.</li>
+<li>We start with an example of the second.</li>
+</ul>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="50">
 <pre><code class="language-cpp"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap>    <span class="hljs-keyword">using</span> Long = <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span>;
@@ -776,16 +781,33 @@ ownership whereas the second allows <strong>shared</strong> ownership. We start 
 </span></span></foreignObject></svg></code></pre>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="52">
-<p>First, there is no <strong>delete</strong> of a <code>std::shared_ptr</code> because it is automatically destroyed (i.e. dtor is called) when it goes out of scope <strong>and</strong> it frees the resource it is pointing to <strong>only if</strong> it is the <strong>last</strong> shared_ptr copy.  Second, it is used exactly like pointers.</p>
+<ul>
+<li>there is no <strong>delete</strong> of a <code>std::shared_ptr</code> - - it is automatically destroyed (i.e. dtor is called) when it goes out of scope <strong>and</strong></li>
+<li>it frees the resource it is pointing to <strong>only if</strong> it is the <strong>last</strong> shared_ptr copy.</li>
+<li>it is used exactly like pointers.</li>
+</ul>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="53">
-<p>In the example above there are three <code>std::shared_ptr</code>, all pointing to the resource allocated by the <code>Shared_Owner</code> object <em>x</em>. Inside the block two <code>std::shared_ptr</code> objects are created <em>p</em> and <em>q</em>, both pointing to the memory block allocated by <em>x</em>. When they go out of scope, and therefore they are destroyed,  the allocated memory is not freed, the number of copies is just decremented.<br />
-Now when <em>x</em> goes out of scope, it is the last shared_ptr pointing to the resource and therefore it frees it.<br />
-You can try the above example here <a href="https://godbolt.org/z/c9159K">here</a>.</p>
+<ul>
+<li>In the example above there are three <code>std::shared_ptr</code>,</li>
+<li>all pointing to the resource allocated by the <code>Shared_Owner</code> object <em>x</em>.</li>
+<li>Inside the block two <code>std::shared_ptr</code> objects are created <em>p</em> and <em>q</em>,</li>
+<li>both pointing to the memory block allocated by <em>x</em>. - When they go out of scope, and therefore they are destroyed,</li>
+<li>the allocated memory is not freed, the number of copies is just decremented.</li>
+<li>when <em>x</em> goes out of scope, it is the last shared_ptr pointing to the resource</li>
+<li>therefore it frees it.<br />
+-You can try the above example here <a href="https://godbolt.org/z/c9159K">here</a>.</li>
+</ul>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="54">
-<p>The <code>std::unique_ptr&lt;T&gt;</code> is similar except it enforces <strong>exclusive</strong> ownership. Below is a similar  example illustrating the memory automatically released by the <code>std::unique_ptr</code> when it is destroyed. Note the two changes due to noncopiable nature of <code>std::unique_ptr</code>. First, in function <code>mod</code> the <code>std::unique_ptr</code> must be passed and returned by reference because we cannot make a copy. Also<br />
-in the statement <code>    std::unique_ptr&lt;int&gt; t = std::move(mod(p-&gt;res));</code> the resource held by <em>p</em> is transferred to <em>t</em>.</p>
+<ul>
+<li>The <code>std::unique_ptr&lt;T&gt;</code> is similar except it enforces <strong>exclusive</strong> ownership.</li>
+<li>Below is a similar  example illustrating the memory automatically released by the <code>std::unique_ptr</code> when it is destroyed.</li>
+<li>Note the two changes due to noncopiable nature of <code>std::unique_ptr</code>.</li>
+<li>First, in function <code>mod</code> the <code>std::unique_ptr</code> must be passed and returned by reference</li>
+<li>we cannot make a copy.</li>
+<li>in the statement <code>    std::unique_ptr&lt;int&gt; t = std::move(mod(p-&gt;res));</code> the resource held by <em>p</em> is transferred to <em>t</em>.</li>
+</ul>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="55">
 <pre><code class="language-cpp"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-keyword">using</span> Long = <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span>;
@@ -828,8 +850,11 @@ in the statement <code>    std::unique_ptr&lt;int&gt; t = std::move(mod(p-&gt;re
 </span></span></foreignObject></svg></code></pre>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="57">
-<p>Using the performance profiler in VS (Debug-&gt;Performance profiler) we see that the above code uses only 4MB<br />
-which means each iteration  4MB are allocated and then freed.</p>
+<ul>
+<li>Using the performance profiler in VS (Debug-&gt;Performance profiler)</li>
+<li>the above code uses only 4MB</li>
+<li>which means each iteration  4MB are allocated and then freed.</li>
+</ul>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="58">
 <p><img src="figs/small_memory.png" alt="Figure 1" /></p>
