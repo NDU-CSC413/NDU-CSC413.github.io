@@ -499,21 +499,115 @@ access to the lock. If successful, all calls to ```lock``` are blocked whereas c
 
 
 ## std::(unique/shared)_lock
+  
+ 
+- These lock a ```std::shared_mutex``` in a exclusive/shared modes.
+-  A ```std::unique_lock``` has a richer interface than ```std::lock_guard```. 
+- In all situations a ```lock_guard``` can be replaced by a ```unique_lock``` but not the other
+way around. 
+- For example, the mutex held by a ```std::lock_guard``` will be released __only__ when the lock_guard is destructed - whereas ```std::unique_lock``` has an ```unlock()``` member function. 
+- This comes in handy in many situations, particularly, as we will see later, when used with __condition variables__.
 
-These lock a ```std::shared_mutex``` in a exclusive/shared modes. A ```std::unique_lock``` has a richer interface 
-than ```std::lock_guard```. In all situations a ```lock_guard``` can be replaced by a ```unique_lock``` but not the other
-way around. For example, the mutex held by a ```std::lock_guard``` will be released __only__ when the lock_guard is destructed whereas ```std::unique_lock``` has an ```unlock()``` member function. This comes in handy in many situations, particularly, as we will see later, when used with __condition variables__. Below is a modification of the readers/writers code that use __locks__.
+In the reader/writers problem we could modify the reader as follows:
+1. replace ```wrt.lock_shared();``` with ```std::shared_lock<std::shared_mutex> lck(wrt);```
+1. remove ```wrt.unlock_shared();```.
 
+And in the writer
+
+1. replace ```wrt.lock();``` with ```std::unique_lock<std::shared_mutex> lck(wrt);```
+1. remove ```wrt.unlock();```
+
+
+---
 
 ## Atomics
-  
-## Thread safe data structures
-  
+
+- In the motivational example in the beginning of the chapter we use mutexes to synchronize access to a shared variable.
+- For such simple scenarios, C++ provides the ```std::atomic``` types. 
+- Once a variable is declared as atomic, it becomes thread safe.
+
+- For example, in the [Motivating Example ](#motivating-example), where the shared variables _x_ and _y_ are accessed
+we modify the code as follows:
+
+---
+
+1. The declarations
+```cpp
+std::atomic<int> y{0};
+std::atomic<int> x{0};
+```
+
+2. The function calls
+
+```cpp
+void add(std::atomic<int>& val) {
+    for (int i = 0; i < NUM_ITERATIONS; ++i)
+        ++val;
+}
+void sub(std::atomic<int> & val) {
+    for (int i = 0; i < NUM_ITERATIONS; ++i)
+        --val;
+}
+```
+
+---
+
+## Condition Variables
+
+- Condition variables allow  threads to wait for events. 
+- The C++ library provides two versions of condition variables,  ```std::condition_variable``` and ```std::condition_variable_any```
+- both defined in the header ```<condition_variable>```. 
+- In this course we will use the first version only.
+- A condition variable, _cv_, is used in conjunction with a ```std::unique_lock```.
+- With a ```std::unique_lock``` we can explicitly lock and unlock the mutex it holds,
+
+---
+
+-  Typical usage :
+```cpp
+/* global declarations */
+std::mutex m;
+std::condition_variable vc;
+/* usage in thread */
+std::unique_lock<std::mutex> lck(m);
+cv.wait(lck);
+```
+
+---
+
+The call to ```cv.wait(lck)``` does the following:
+
+1. calls ```lck.unlock()```.
+1. blocks thread and adds it to list of threads waiting on *this
+
+When _cv_ receives notification :
+
+1. wake up thread
+1. calls lck.lock()
+The logic of condition variables is implemented mainly in the ```std::condition_variable::wait()``` function.
+
+---
+
+
+```cpp
+template<typename Predicate >
+void wait( std::unique_lock<std::mutex>& lck, Predicate pred );
+
+```
+
+```wait``` executes as follows:
+1. If  _pred_ returns true, _wait_ returns.
+1. If _pred_ returns false, _wait_ unlocks _lck_ and puts the calling thread in waiting state.
+1. When the condition variable is notified (see later) _wait_ reacquires _lck_ and wakes up the thread. 
+
+---
+
 ## Barriers
-  
+
+
 ## Parallel mergesort
-  
-  
+
+## Futures/Promises
   
   
   
