@@ -619,7 +619,7 @@ int main() {
 In the above code, the class ```Leaker``` allocates 1MB of memory. It has a choice, either it __does not free__ the allocated memory, as we did in the example above, or frees it in the destructor with the danger that ```p``` will also free it. Using the performance profiler in VS (Debug->Performance profiler) we see that the above code uses about 200MB
 which makes sense since each iteration allocates 4MB.
 
-![Figure 1](figs/large_memory.png)
+![Figure 1](/img/large_memory.png)
 
 The other choice is to modify the destructor as follows
 ```cpp
@@ -730,7 +730,7 @@ int main(){
 Using the performance profiler in VS (Debug->Performance profiler) we see that the above code uses only 4MB
 which means each iteration  4MB are allocated and then freed.
 
-![Figure 1](figs/small_memory.png)
+![Figure 1](/img/small_memory.png)
 
 # Templates
 
