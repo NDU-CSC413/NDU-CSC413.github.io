@@ -900,23 +900,28 @@ T <span class="hljs-title">add</span><span class="hljs-params">(T x,T y)</span><
 add&lt;<span class="hljs-keyword">double</span>&gt;(u,v);
 add&lt;<span class="hljs-built_in">std</span>::<span class="hljs-built_in">string</span>&gt;(s,k);
 </span></span></foreignObject></svg></code></pre>
-</section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="63">
-<p>Note that the template is instantiated <strong>as needed</strong> at compile time. Also, we can pass parameters to the template other than types. For example</p>
-</section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="64">
+<ul>
+<li>Note that the template is instantiated <strong>as needed</strong> at compile time. Also, we can pass parameters to the template other than types. For example</li>
+</ul>
 <pre><code class="language-cpp"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-keyword">template</span> &lt;<span class="hljs-keyword">int</span> n&gt;
 <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">doit</span><span class="hljs-params">()</span></span>{
     <span class="hljs-keyword">int</span> a[n];
 }
 </span></span></foreignObject></svg></code></pre>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="65">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="63">
 <h2>Template specialization</h2>
-<p>The <code>add</code> example above doesn't make any sense if used with <code>char</code>. Try adding the two characters 'a' and 'b'. Therefore we would like to change the definition of <code>add</code> when the parameter type is <code>char</code>. This is done using <strong>template specialization</strong>. One reasonable &quot;addition&quot; of characters would be to obtain a character a the same distance from the last one. For example, the distance (in ASCII code) between 'a' abd 'b' is 1 so the result of <code>add('a','b')</code><br />
-would be 'c' since <code>b+1=c</code>.</p>
+<ul>
+<li>The <code>add</code> example above doesn't make any sense if used with <code>char</code>.</li>
+<li>Try adding the two characters 'a' and 'b'.</li>
+<li>we would like to change the definition of <code>add</code> when the parameter type is <code>char</code>.</li>
+<li>This is done using <strong>template specialization</strong>.</li>
+<li>One reasonable &quot;addition&quot; of characters would be to obtain a character a the same distance from the last one.</li>
+<li>For example, the distance (in ASCII code) between 'a' abd 'b' is 1 so the result of <code>add('a','b')</code><br />
+would be 'c' since <code>b+1=c</code>.</li>
+</ul>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="66">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="64">
 <p>Below is the syntax for <strong>template specialization</strong>.</p>
 <pre><code class="language-cpp"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-function"><span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">typename</span> T&gt;
 T <span class="hljs-title">add</span><span class="hljs-params">(T x,T y)</span></span>{
@@ -928,22 +933,33 @@ T <span class="hljs-title">add</span><span class="hljs-params">(T x,T y)</span><
 }
 </span></span></foreignObject></svg></code></pre>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="67">
-<p>Note that the specialization starts with <code>template&lt;&gt;</code> and every occurence of <code>T</code> was replaced by <code>char</code>.<br />
-Even though the second implementation of <code>add</code> for <code>char</code> makes more sense that the first it is not satisfactory.<br />
-What we would like is for the result of <code>add('a','b')</code> to give &quot;ab&quot;. This means that the signature would become<br />
-<code>std::string add(char,char )</code>. We could be tempted to specialize it as follows</p>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="65">
+<ul>
+<li>Note that the specialization starts with <code>template&lt;&gt;</code> and every occurence of <code>T</code> was replaced by <code>char</code>.</li>
+<li>Even though the second implementation of <code>add</code> for <code>char</code> makes more sense that the first it is not satisfactory.</li>
+<li>What we would like is for the result of <code>add('a','b')</code> to give &quot;ab&quot;.</li>
+<li>This means that the signature would become<br />
+<code>std::string add(char,char )</code>.</li>
+<li>We could be tempted to specialize it as follows</li>
+</ul>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="68">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="66">
 <pre><code class="language-cpp"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-keyword">template</span>&lt;&gt;
 <span class="hljs-built_in">std</span>::<span class="hljs-built_in">string</span> add&lt;<span class="hljs-keyword">char</span>&gt;(<span class="hljs-keyword">char</span> a,<span class="hljs-keyword">char</span> b){
     <span class="hljs-keyword">return</span> <span class="hljs-built_in">std</span>::<span class="hljs-built_in">string</span>(<span class="hljs-number">1</span>,a)+<span class="hljs-built_in">std</span>::<span class="hljs-built_in">string</span>(<span class="hljs-number">1</span>,b);
 }
 </span></span></foreignObject></svg></code></pre>
-<p>But that is <strong>NOT</strong> a specialization. Notice that in the &quot;general&quot; version the return value is the same type as the input parameters wich is not the case for our specialization. The compiler will give an error. You can check it <a href="https://godbolt.org/z/GKG57W">here</a>.</p>
+<ul>
+<li>But that is <strong>NOT</strong> a specialization.</li>
+<li>The &quot;general&quot; version the return value is the same type as the input parameters which is not the case for our specialization.</li>
+<li>The compiler will give an error.</li>
+<li>You can check it <a href="https://godbolt.org/z/GKG57W">here</a>.</li>
+</ul>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="69">
-<p>We can accomplish our aim by using <code>auto</code> as the return value, this way both versions will have the same signature.</p>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="67">
+<ul>
+<li>We can accomplish our aim by using <code>auto</code> as the return value, this way both versions will have the same signature.</li>
+</ul>
 <pre><code class="language-cpp"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-function"><span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">typename</span> T&gt;
 <span class="hljs-keyword">auto</span> <span class="hljs-title">add</span><span class="hljs-params">(T a,T b)</span></span>{
    <span class="hljs-keyword">return</span> a+b;
@@ -956,18 +972,38 @@ What we would like is for the result of <code>add('a','b')</code> to give &quot;
 </span></span></foreignObject></svg></code></pre>
 <p>You can try it <a href="https://godbolt.org/z/569Yfn">here</a></p>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="70">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="68">
 <h1>Algorithms in STL</h1>
-<p>The standard template library STL defines a set of general purpose containers and algorithms. You are almost always advised to use those instead of writing your own. Furthermore, since C++17, most of the algorithms can take advantage of parallelisation. In this section we look at a few examples. Most of these algorithms need the &lt;algorithm&gt; or &lt;numeric&gt; header and they are defined over a range [start Iterator, end Iterator).</p>
+<ul>
+<li>The standard template library STL defines a set of general purpose containers and algorithms.</li>
+<li>You are almost always advised to use those instead of writing your own.</li>
+<li>Furthermore, since C++17, most of the algorithms can take advantage of parallelisation.</li>
+<li>In this section we look at a few examples.</li>
+<li>Most of these algorithms need the &lt;algorithm&gt; or &lt;numeric&gt; header and they are defined over a range [start Iterator, end Iterator).</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="69">
+<h2>STL containers and iterators</h2>
+<ul>
+<li>Iterators are generalization of pointers</li>
+<li>They present a common interface to all STL containers and algorithms.</li>
+<li>For an array a pointer is sufficient since the elements of an array form a <strong>contiguous</strong> location in memory.</li>
+<li>What if the elements are not stored contiguously?</li>
+<li>Every container stores the elements differently,</li>
+<li>it implements its own methods to <em>iterate</em> over its elements.</li>
+<li>The user does not need to know the internal workings of the container</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="70">
+<ul>
+<li>Given a container <code>c</code> an iterator <code>itr</code> points at an element stored in <code>c</code>.</li>
+<li>Therefore dereferencing an iterator <code>*itr</code> will return the element itself.</li>
+<li>Also iterators can be incremented and decremented like pointers: <code>itr++</code> and <code>itr--</code>.</li>
+<li>Furthermore, every container <code>c</code> has a <code>begin</code> and <code>end()</code> method.</li>
+</ul>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="71">
-<h2>STL containers and iterators</h2>
-<p>Iterators are generalization of pointers and present a common interface to all STL containers and algorithms. For an array a pointer is sufficient since the elements of an array form a <strong>contiguous</strong> location in memory. What if the elements are not stored contiguously? Since every container stores the elements differently, it implements its own methods to <em>iterate</em> over its elements. This has the added value that the user does not need to know the internal workings of the container in order to be able to use it.</p>
-</section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="72">
-<p>Given a container <code>c</code> an iterator <code>itr</code> points at an element stored in <code>c</code>. Therefore dereferencing an iterator <code>*itr</code> will return the element itself. Also iterators can be incremented and decremented like pointers: <code>itr++</code> and <code>itr--</code>. Furthermore, every container <code>c</code> has a <code>begin</code> and <code>end()</code> method.</p>
-</section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="73">
+<h3>Example with vector</h3>
 <pre><code class="language-cpp"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;vector&gt;</span></span>
 <span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span>
 <span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>{
@@ -979,17 +1015,17 @@ What we would like is for the result of <code>add('a','b')</code> to give &quot;
   }
 }  
 </span></span></foreignObject></svg></code></pre>
+<ul>
+<li>The auto keyword is useful since otherwise we have to write down the long type of the iterator:</li>
+<li><code>std::vector&lt;std::string&gt;</code>.</li>
+</ul>
+<p><code>std::vector&lt;std::string&gt;::iterator itr;</code></p>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="74">
-<p>The auto keyword is useful since otherwise we have to write down the long type of the iterator: (since it is an iterator to container of type <code>std::vector&lt;std::string&gt;</code>).</p>
-</section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="75">
-<pre><code class="language-cpp"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-built_in">std</span>::<span class="hljs-built_in">string</span>&gt;::iterator itr;
-</span></span></foreignObject></svg></code></pre>
-<p>vectors,unlike <code>std::list</code>, are required to store their content at contiguous locations. Therefore they support<br />
-random access to elements and thus define the index operator</p>
-</section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="76">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="72">
+<ul>
+<li>vectors,unlike <code>std::list</code>, are required to store their content at contiguous locations.</li>
+<li>Therefore they support random access to elements and thus define the index operator</li>
+</ul>
 <pre><code class="language-cpp"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt; iv;
 iv.push_back(<span class="hljs-number">1</span>);
 iv.push_back(<span class="hljs-number">2</span>);
@@ -997,14 +1033,22 @@ iv.push_back(<span class="hljs-number">2</span>);
   iv[i]=i;
 </span></span></foreignObject></svg></code></pre>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="77">
-<p>Since vectors are required by the c++ standard to use contiguous memory it is best to add and remove(as opposed to change) from the end of a vector. While we will deal mostly with <code>std::vector</code> there are many other types of container/container adaptor  in the STL such as <code>std::list</code>, <code>std::stack</code>, <code>std::map</code>,etc.</p>
-</section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="78">
-<h2>Algorithms</h2>
-<p>In this section we explore a few algorithms provided by the STL.</p>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="73">
 <ul>
-<li><code>std::count</code> and <code>std::count_if</code> (<a href="https://en.cppreference.com/w/cpp/algorithm/count">signature</a>)</li>
+<li>Since vectors are required by the c++ standard to use contiguous memory it is best to add and remove(as opposed to change) from the end of a vector.</li>
+<li>While we will deal mostly with <code>std::vector</code> there are many other types of container/container adaptor  in the STL</li>
+<li>such as <code>std::list</code>, <code>std::stack</code>, <code>std::map</code>,etc.</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="74">
+<h2>Algorithms</h2>
+<ul>
+<li>
+<p>In this section we explore a few algorithms provided by the STL.</p>
+</li>
+<li>
+<p><code>std::count</code> and <code>std::count_if</code> (<a href="https://en.cppreference.com/w/cpp/algorithm/count">signature</a>)</p>
+</li>
 </ul>
 <pre><code class="language-cpp"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span>
 <span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;algorithm&gt;</span></span>
@@ -1019,7 +1063,7 @@ iv.push_back(<span class="hljs-number">2</span>);
 };
 </span></span></foreignObject></svg></code></pre>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="79">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="75">
 <pre><code class="language-cpp"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>{
     <span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt; v {<span class="hljs-number">7</span>,<span class="hljs-number">2</span>,<span class="hljs-number">4</span>,<span class="hljs-number">2</span>,<span class="hljs-number">2</span>,<span class="hljs-number">8</span>,<span class="hljs-number">2</span>};
     <span class="hljs-keyword">int</span> r=<span class="hljs-built_in">std</span>::count(v.begin(),v.end(),<span class="hljs-number">2</span>);
@@ -1030,16 +1074,26 @@ iv.push_back(<span class="hljs-number">2</span>);
 }
 </span></span></foreignObject></svg></code></pre>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="80">
-<p>As you can see count_if takes a unary predicate as a third parameter and this can be  either a function pointer or a function object. Recall, a function object is one that defines an operator().<br />
-<a href="https://godbolt.org/z/nY35hr">click here to run</a></p>
-</section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="81">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="76">
 <ul>
-<li><code>std::find</code> and <code>std::find_if</code> <a href="https://en.cppreference.com/w/cpp/algorithm/find">reference</a>. Find the <strong>first</strong> occurrence of an object in a container and returns an iterator pointing to it.</li>
+<li>
+<p><code>count_if</code> takes a unary predicate as a third parameter and this can be  either a function pointer or a function object.</p>
+</li>
+<li>
+<p>Recall, a function object is one that defines an operator().</p>
+</li>
+<li>
+<p><a href="https://godbolt.org/z/nY35hr">click here to run</a></p>
+</li>
 </ul>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="82">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="77">
+<ul>
+<li><code>std::find</code> and <code>std::find_if</code> <a href="https://en.cppreference.com/w/cpp/algorithm/find">reference</a>.</li>
+<li>Find the <strong>first</strong> occurrence of an object in a container and returns an iterator pointing to it.</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="78">
 <pre><code class="language-cpp"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>{
   <span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt; v {<span class="hljs-number">3</span>,<span class="hljs-number">7</span>,<span class="hljs-number">9</span>,<span class="hljs-number">1</span>,<span class="hljs-number">1</span>,<span class="hljs-number">8</span>,<span class="hljs-number">19</span>,<span class="hljs-number">2</span>,<span class="hljs-number">1</span>,<span class="hljs-number">4</span>};
   <span class="hljs-keyword">auto</span> first=<span class="hljs-built_in">std</span>::find(v.begin(),v.end(),<span class="hljs-number">1</span>);
@@ -1062,13 +1116,26 @@ iv.push_back(<span class="hljs-number">2</span>);
 </span></span></foreignObject></svg></code></pre>
 <p>You can try it <a href="https://godbolt.org/z/75jKq7">here</a></p>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="83">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="79">
 <ul>
-<li><code>std::remove</code>, <code>std::remove_if</code> and <code>std::erase</code></li>
+<li>
+<p><code>std::remove</code>, <code>std::remove_if</code> and <code>std::erase</code></p>
+</li>
+<li>
+<p>The STL functions <code>std::remove</code> and <code>std::remove_if</code> do <strong>not</strong> remove anything.</p>
+</li>
+<li>
+<p>They just partition the input range into two parts</p>
+</li>
+<li>
+<p>a left part which contains the original objects, in the same order, where the desired object is removed,</p>
+</li>
+<li>
+<p>a right part which contains &quot;non useful&quot; objects: either the one to be removed or additional copies of the already existing objects.</p>
+</li>
 </ul>
-<p>The STL functions <code>std::remove</code> and <code>std::remove_if</code> do <strong>not</strong> remove anything. They just partition the input range into a left part which contains the original objects, in the same order, where the desired object is removed, and a right part which contains &quot;non useful&quot; objects: either the one to be removed or additional copies of the already existing objects.</p>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="84">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="80">
 <pre><code class="language-cpp"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>{
     <span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt; v {<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>,<span class="hljs-number">4</span>,<span class="hljs-number">2</span>,<span class="hljs-number">5</span>,<span class="hljs-number">2</span>,<span class="hljs-number">6</span>};
     <span class="hljs-keyword">auto</span> new_end=<span class="hljs-built_in">std</span>::remove(v.begin(),v.end(),<span class="hljs-number">2</span>);
@@ -1082,11 +1149,14 @@ iv.push_back(<span class="hljs-number">2</span>);
 }
 </span></span></foreignObject></svg></code></pre>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="85">
-<p>As you might have guessed <code>std::remove_if</code> works the same way but using a predicate instead of a value.<br />
-These two functions are useful, especially, for the remove-erase idiom. Once we have the &quot;useful&quot; range with the desired object removed from it we can actually erase it.</p>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="81">
+<ul>
+<li><code>std::remove_if</code> works the same way but using a predicate instead of a value.</li>
+<li>These two functions are useful, especially, for the <strong>remove-erase idiom</strong>.</li>
+<li>Once we have the &quot;useful&quot; range with the desired object removed from it we can actually erase it.</li>
+</ul>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="86">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="82">
 <pre><code class="language-cpp"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>{
     <span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt; v {<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>,<span class="hljs-number">4</span>,<span class="hljs-number">2</span>,<span class="hljs-number">5</span>,<span class="hljs-number">2</span>,<span class="hljs-number">6</span>};
     <span class="hljs-keyword">auto</span> new_end=<span class="hljs-built_in">std</span>::remove(v.begin(),v.end(),<span class="hljs-number">2</span>);
@@ -1101,9 +1171,11 @@ These two functions are useful, especially, for the remove-erase idiom. Once we 
 </span></span></foreignObject></svg></code></pre>
 <p>You can try it <a href="https://godbolt.org/z/6h9M9T">here</a></p>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="87">
-<p>In many situation we need to print all the values in a container using a range-based for loop and auto.<br />
-We can type a little less if we defined an operator <code>&lt;&lt;</code> that can handle containers.</p>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="83">
+<ul>
+<li>Sometimes we need to print all the values in a container using a range-based for loop and auto.</li>
+<li>We can type a little less if we defined an operator <code>&lt;&lt;</code> that can handle containers.</li>
+</ul>
 <pre><code class="language-cpp"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">typename</span> Ostream,<span class="hljs-keyword">typename</span> Container&gt;
 Ostream&amp; <span class="hljs-keyword">operator</span>&lt;&lt;(Ostream&amp; os,Container&amp; c) {
 	<span class="hljs-keyword">for</span> (<span class="hljs-keyword">auto</span> x : c)
@@ -1112,11 +1184,14 @@ Ostream&amp; <span class="hljs-keyword">operator</span>&lt;&lt;(Ostream&amp; os,
 }
 </span></span></foreignObject></svg></code></pre>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="88">
-<p>The above works well with all sorts of containers, except with strings since will will print a string<br />
-as characters separated by commas. We can fix this by using template specialization</p>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="84">
+<ul>
+<li>The above works well with all sorts of containers, except with strings</li>
+<li>In that case it will print it  as characters separated by commas.</li>
+<li>We can fix this by using template specialization</li>
+</ul>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="89">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="85">
 <pre><code class="language-cpp"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-keyword">template</span> &lt;&gt;
 <span class="hljs-built_in">std</span>::ostream&amp; <span class="hljs-keyword">operator</span>&lt;&lt; &lt;<span class="hljs-built_in">std</span>::ostream, <span class="hljs-built_in">std</span>::<span class="hljs-built_in">string</span>&gt;
 			(<span class="hljs-built_in">std</span>::ostream&amp; os, <span class="hljs-built_in">std</span>::<span class="hljs-built_in">string</span>&amp; s) {
@@ -1126,14 +1201,16 @@ as characters separated by commas. We can fix this by using template specializat
 }
 </span></span></foreignObject></svg></code></pre>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="90">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="86">
 <h2>substrings and subranges</h2>
-<p>The <code>std::string</code> class has a convenient member <code>std::string::find</code> which returns the position of<br />
-the first character of the substring in the string if found, and <code>std::string::npos</code> otherwise.<br />
-A general &quot;substring&quot; finding method is <code>std::search</code> which will find a &quot;subrange&quot; in any container,<br />
-including strings.</p>
+<ul>
+<li>The <code>std::string</code> class has a convenient member <code>std::string::find</code></li>
+<li>it returns the position of the first character of the substring in the string if found</li>
+<li>and <code>std::string::npos</code> otherwise.</li>
+<li>A general &quot;substring&quot; finding method is <code>std::search</code> which will find a &quot;subrange&quot; in any container, including strings.</li>
+</ul>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="91">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="87">
 <pre><code class="language-cpp"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>{
     <span class="hljs-built_in">std</span>::<span class="hljs-built_in">string</span> s {<span class="hljs-string">&quot;First Middle Last Middle&quot;</span>};
     <span class="hljs-built_in">std</span>::<span class="hljs-built_in">string</span> sub {<span class="hljs-string">&quot;Middle&quot;</span>};
@@ -1149,11 +1226,15 @@ including strings.</p>
 }
 </span></span></foreignObject></svg></code></pre>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="92">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="88">
 <h3>Lambda expressions</h3>
-<p>As we saw, many algorithms, especially in STL, take a <strong>callable</strong> object as a parameter.  Lambda expression are a convenient way to define such a callable object. We rewrite the previous example using lambda expressions.</p>
+<ul>
+<li>As we saw, many algorithms, especially in STL, take a <strong>callable</strong> object as a parameter.</li>
+<li><strong>Lambda expressions</strong> are a convenient way to define such a callable object.</li>
+<li>We rewrite the previous example using lambda expressions.</li>
+</ul>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="93">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="89">
 <pre><code class="language-cpp"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>{
     <span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt; v {<span class="hljs-number">7</span>,<span class="hljs-number">2</span>,<span class="hljs-number">4</span>,<span class="hljs-number">2</span>,<span class="hljs-number">2</span>,<span class="hljs-number">8</span>,<span class="hljs-number">2</span>};
     <span class="hljs-keyword">int</span> r=<span class="hljs-built_in">std</span>::count(v.begin(),v.end(),<span class="hljs-number">2</span>);
@@ -1172,9 +1253,27 @@ including strings.</p>
 </span></span></foreignObject></svg></code></pre>
 <p><a href="https://godbolt.org/z/MsE1jY">click here to run</a></p>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="94">
-<p>The brackets &quot;[]&quot; introduces the lambda expression, sometimes called the capture list. The &quot;()&quot; are the parameters passed to the expression, very similar to function arguments. Finally, between &quot;{&quot; and &quot;}&quot; is the body.</p>
-<p>Note the <strong>capture</strong> of the variable <em>val</em>. We could have used &quot;[&amp;val]&quot; to capture it by reference. If we want to capture all the variables we use &quot;[=]&quot; and by reference &quot;[&amp;]&quot;.</p>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="90">
+<ul>
+<li>
+<p>The brackets &quot;[]&quot; introduces the lambda expression, sometimes called the capture list.</p>
+</li>
+<li>
+<p>The &quot;()&quot; are the parameters passed to the expression,  similar to function arguments.</p>
+</li>
+<li>
+<p>Finally, between &quot;{&quot; and &quot;}&quot; is the body.</p>
+</li>
+<li>
+<p>Note the <strong>capture</strong> of the variable <em>val</em>.</p>
+</li>
+<li>
+<p>We could have used &quot;[&amp;val]&quot; to capture it by reference.</p>
+</li>
+<li>
+<p>If we want to capture all the variables we use &quot;[=]&quot; and by reference &quot;[&amp;]&quot;.</p>
+</li>
+</ul>
 </section>
 <script>!function(){"use strict";const t="marpitSVGPolyfill:setZoomFactor,",e=Symbol();let r,o;function n(n){const i="object"==typeof n&&n.target||document,a="object"==typeof n?n.zoom:n;window[e]||(Object.defineProperty(window,e,{configurable:!0,value:!0}),window.addEventListener("message",(({data:e,origin:r})=>{if(r===window.origin)try{if(e&&"string"==typeof e&&e.startsWith(t)){const[,t]=e.split(","),r=Number.parseFloat(t);Number.isNaN(r)||(o=r)}}catch(t){console.error(t)}})));let l=!1;Array.from(i.querySelectorAll("svg[data-marpit-svg]"),(t=>{var e,n,i,s;t.style.transform||(t.style.transform="translateZ(0)");const c=a||o||t.currentScale||1;r!==c&&(r=c,l=c);const d=t.getBoundingClientRect(),{length:u}=t.children;for(let r=0;r<u;r+=1){const o=t.children[r],a=o.getScreenCTM();if(a){const t=null!==(n=null===(e=o.x)||void 0===e?void 0:e.baseVal.value)&&void 0!==n?n:0,r=null!==(s=null===(i=o.y)||void 0===i?void 0:i.baseVal.value)&&void 0!==s?s:0,l=o.firstElementChild,{style:u}=l;u.transformOrigin||(u.transformOrigin=`${-t}px ${-r}px`),u.transform=`scale(${c}) matrix(${a.a}, ${a.b}, ${a.c}, ${a.d}, ${a.e-d.left}, ${a.f-d.top}) translateZ(0.0001px)`}}})),!1!==l&&Array.from(i.querySelectorAll("iframe"),(({contentWindow:e})=>{null==e||e.postMessage(`${t}${l}`,"null"===window.origin?"*":window.origin)}))}r=1,o=void 0;const i=(t,e,r)=>{if(t.getAttribute(e)!==r)return t.setAttribute(e,r),!0};function a({once:t=!1,target:e=document}={}){const r="Apple Computer, Inc."===navigator.vendor?[n]:[];let o=!t;const a=()=>{for(const t of r)t({target:e});!function(t=document){Array.from(t.querySelectorAll('svg[data-marp-fitting="svg"]'),(t=>{var e;const r=t.firstChild,o=r.firstChild,{scrollWidth:n,scrollHeight:a}=o;let l,s=1;if(t.hasAttribute("data-marp-fitting-code")&&(l=null===(e=t.parentElement)||void 0===e?void 0:e.parentElement),t.hasAttribute("data-marp-fitting-math")&&(l=t.parentElement),l){const t=getComputedStyle(l),e=Math.ceil(l.clientWidth-parseFloat(t.paddingLeft||"0")-parseFloat(t.paddingRight||"0"));e&&(s=e)}const c=Math.max(n,s),d=Math.max(a,1),u=`0 0 ${c} ${d}`;i(r,"width",`${c}`),i(r,"height",`${d}`),i(t,"preserveAspectRatio",getComputedStyle(t).getPropertyValue("--preserve-aspect-ratio")||"xMinYMin meet"),i(t,"viewBox",u)&&t.classList.toggle("__reflow__")}))}(e),o&&window.requestAnimationFrame(a)};return a(),()=>{o=!1}}const l=Symbol(),s=document.currentScript;((t=document)=>{if("undefined"==typeof window)throw new Error("Marp Core's browser script is valid only in browser context.");if(t[l])return t[l];const e=a({target:t}),r=()=>{e(),delete t[l]};Object.defineProperty(t,l,{configurable:!0,value:r})})(s?s.getRootNode():document)}();
 </script></foreignObject></svg></div><script>!function(){"use strict";var e=function(e,t){var n,r=1===(e.parent||e).nodeType?e.parent||e:document.querySelector(e.parent||e),s=[].filter.call("string"==typeof e.slides?r.querySelectorAll(e.slides):e.slides||r.children,(function(e){return"SCRIPT"!==e.nodeName})),a={},i=function(e,t){return(t=t||{}).index=s.indexOf(e),t.slide=e,t},o=function(e,t){a[e]=(a[e]||[]).filter((function(e){return e!==t}))},l=function(e,t){return(a[e]||[]).reduce((function(e,n){return e&&!1!==n(t)}),!0)},c=function(e,t){s[e]&&(n&&l("deactivate",i(n,t)),n=s[e],l("activate",i(n,t)))},d=function(e,t){var r=s.indexOf(n)+e;l(e>0?"next":"prev",i(n,t))&&c(r,t)},u={off:o,on:function(e,t){return(a[e]||(a[e]=[])).push(t),o.bind(null,e,t)},fire:l,slide:function(e,t){if(!arguments.length)return s.indexOf(n);l("slide",i(s[e],t))&&c(e,t)},next:d.bind(null,1),prev:d.bind(null,-1),parent:r,slides:s,destroy:function(e){l("destroy",i(n,e)),a={}}};return(t||[]).forEach((function(e){e(u)})),n||c(0),u};function t(e){e.parent.classList.add("bespoke-marp-parent"),e.slides.forEach((e=>e.classList.add("bespoke-marp-slide"))),e.on("activate",(t=>{const n=t.slide,r=!n.classList.contains("bespoke-marp-active");e.slides.forEach((e=>{e.classList.remove("bespoke-marp-active"),e.setAttribute("aria-hidden","true")})),n.classList.add("bespoke-marp-active"),n.removeAttribute("aria-hidden"),r&&(n.classList.add("bespoke-marp-active-ready"),document.body.clientHeight,n.classList.remove("bespoke-marp-active-ready"))}))}function n(e){let t=0,n=0;Object.defineProperty(e,"fragments",{enumerable:!0,value:e.slides.map((e=>[null,...e.querySelectorAll("[data-marpit-fragment]")]))});const r=r=>void 0!==e.fragments[t][n+r],s=(r,s)=>{t=r,n=s,e.fragments.forEach(((e,t)=>{e.forEach(((e,n)=>{if(null==e)return;const a=t<r||t===r&&n<=s;e.setAttribute("data-bespoke-marp-fragment",a?"active":"inactive"),t===r&&n===s?e.setAttribute("data-bespoke-marp-current-fragment","current"):e.removeAttribute("data-bespoke-marp-current-fragment")}))})),e.fragmentIndex=s;const a={slide:e.slides[r],index:r,fragments:e.fragments[r],fragmentIndex:s};e.fire("fragment",a)};e.on("next",(({fragment:a=!0})=>{if(a){if(r(1))return s(t,n+1),!1;const a=t+1;e.fragments[a]&&s(a,0)}else{const r=e.fragments[t].length;if(n+1<r)return s(t,r-1),!1;const a=e.fragments[t+1];a&&s(t+1,a.length-1)}})),e.on("prev",(({fragment:a=!0})=>{if(r(-1)&&a)return s(t,n-1),!1;const i=t-1;e.fragments[i]&&s(i,e.fragments[i].length-1)})),e.on("slide",(({index:t,fragment:n})=>{let r=0;if(void 0!==n){const s=e.fragments[t];if(s){const{length:e}=s;r=-1===n?e-1:Math.min(Math.max(n,0),e-1)}}s(t,r)})),s(0,0)}
