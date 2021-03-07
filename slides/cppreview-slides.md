@@ -971,15 +971,7 @@ add<int>(x,y);
 add<double>(u,v);
 add<std::string>(s,k);
 ```
-
-
----
-
-
-Note that the template is instantiated __as needed__ at compile time. Also, we can pass parameters to the template other than types. For example
-
-
----
+- Note that the template is instantiated __as needed__ at compile time. Also, we can pass parameters to the template other than types. For example
 
 ```cpp
 template <int n>
@@ -991,7 +983,12 @@ void doit(){
 ---
 
 ## Template specialization
- The ```add``` example above doesn't make any sense if used with ```char```. Try adding the two characters 'a' and 'b'. Therefore we would like to change the definition of ```add``` when the parameter type is ```char```. This is done using __template specialization__. One reasonable "addition" of characters would be to obtain a character a the same distance from the last one. For example, the distance (in ASCII code) between 'a' abd 'b' is 1 so the result of ```add('a','b')```
+ - The ```add``` example above doesn't make any sense if used with ```char```. 
+ - Try adding the two characters 'a' and 'b'.
+ -  we would like to change the definition of ```add``` when the parameter type is ```char```. 
+ - This is done using __template specialization__. 
+ - One reasonable "addition" of characters would be to obtain a character a the same distance from the last one. 
+ - For example, the distance (in ASCII code) between 'a' abd 'b' is 1 so the result of ```add('a','b')```
  would be 'c' since ```b+1=c```. 
  
  ---
@@ -1010,10 +1007,12 @@ T add(T x,T y){
 
 ---
 
- Note that the specialization starts with ```template<>``` and every occurence of ```T``` was replaced by ```char```.
- Even though the second implementation of ```add``` for ```char``` makes more sense that the first it is not satisfactory.
- What we would like is for the result of ```add('a','b')``` to give "ab". This means that the signature would become
- ```std::string add(char,char )```. We could be tempted to specialize it as follows
+ - Note that the specialization starts with ```template<>``` and every occurence of ```T``` was replaced by ```char```.
+ - Even though the second implementation of ```add``` for ```char``` makes more sense that the first it is not satisfactory.
+ - What we would like is for the result of ```add('a','b')``` to give "ab". 
+ - This means that the signature would become
+ ```std::string add(char,char )```. 
+ - We could be tempted to specialize it as follows
 
 
  ---
@@ -1024,11 +1023,14 @@ T add(T x,T y){
      return std::string(1,a)+std::string(1,b);
  }
  ```
- But that is __NOT__ a specialization. Notice that in the "general" version the return value is the same type as the input parameters wich is not the case for our specialization. The compiler will give an error. You can check it [here](https://godbolt.org/z/GKG57W).
+- But that is __NOT__ a specialization. 
+- The "general" version the return value is the same type as the input parameters which is not the case for our specialization. 
+- The compiler will give an error. 
+- You can check it [here](https://godbolt.org/z/GKG57W).
 
 ---
 
- We can accomplish our aim by using ```auto``` as the return value, this way both versions will have the same signature.
+ - We can accomplish our aim by using ```auto``` as the return value, this way both versions will have the same signature.
  ```cpp
 template<typename T>
 auto add(T a,T b){
@@ -1042,29 +1044,40 @@ auto add<char>(char a,char b){
  ```
  You can try it [here](https://godbolt.org/z/569Yfn)
 
-
  ---
 
 
  # Algorithms in STL
-The standard template library STL defines a set of general purpose containers and algorithms. You are almost always advised to use those instead of writing your own. Furthermore, since C++17, most of the algorithms can take advantage of parallelisation. In this section we look at a few examples. Most of these algorithms need the <algorithm> or <numeric> header and they are defined over a range [start Iterator, end Iterator).
+- The standard template library STL defines a set of general purpose containers and algorithms. 
+- You are almost always advised to use those instead of writing your own. 
+- Furthermore, since C++17, most of the algorithms can take advantage of parallelisation. 
+- In this section we look at a few examples. 
+- Most of these algorithms need the <algorithm> or <numeric> header and they are defined over a range [start Iterator, end Iterator).
 
 
 ---
 
 ## STL containers and iterators
-Iterators are generalization of pointers and present a common interface to all STL containers and algorithms. For an array a pointer is sufficient since the elements of an array form a __contiguous__ location in memory. What if the elements are not stored contiguously? Since every container stores the elements differently, it implements its own methods to _iterate_ over its elements. This has the added value that the user does not need to know the internal workings of the container in order to be able to use it.
 
+- Iterators are generalization of pointers 
+- They present a common interface to all STL containers and algorithms. 
+- For an array a pointer is sufficient since the elements of an array form a __contiguous__ location in memory. 
+- What if the elements are not stored contiguously? 
+- Every container stores the elements differently,
+-  it implements its own methods to _iterate_ over its elements. 
+- The user does not need to know the internal workings of the container 
 
 ---
 
 
- Given a container ```c``` an iterator ```itr``` points at an element stored in ```c```. Therefore dereferencing an iterator ```*itr``` will return the element itself. Also iterators can be incremented and decremented like pointers: ```itr++``` and ```itr--```. Furthermore, every container ```c``` has a ```begin``` and ```end()``` method. 
-
+ - Given a container ```c``` an iterator ```itr``` points at an element stored in ```c```. 
+ - Therefore dereferencing an iterator ```*itr``` will return the element itself. 
+ - Also iterators can be incremented and decremented like pointers: ```itr++``` and ```itr--```. 
+ - Furthermore, every container ```c``` has a ```begin``` and ```end()``` method. 
 
  ---
 
-
+### Example with vector
 ```cpp
 #include <vector>
 #include <iostream>
@@ -1078,22 +1091,15 @@ int main(){
 }  
 ```
 
+- The auto keyword is useful since otherwise we have to write down the long type of the iterator: 
+-  ```std::vector<std::string>```.
+
+```std::vector<std::string>::iterator itr;```
 
 ---
 
-The auto keyword is useful since otherwise we have to write down the long type of the iterator: (since it is an iterator to container of type ```std::vector<std::string>```).
-
----
-
-
-```cpp
-std::vector<std::string>::iterator itr;
-```
-vectors,unlike ```std::list```, are required to store their content at contiguous locations. Therefore they support
-random access to elements and thus define the index operator
-
----
-
+- vectors,unlike ```std::list```, are required to store their content at contiguous locations. 
+- Therefore they support random access to elements and thus define the index operator
 
 ```cpp
 std::vector<int> iv;
@@ -1106,14 +1112,16 @@ for(int i=0;i<iv.size();i++)
 
 ---
 
-Since vectors are required by the c++ standard to use contiguous memory it is best to add and remove(as opposed to change) from the end of a vector. While we will deal mostly with ```std::vector``` there are many other types of container/container adaptor  in the STL such as ```std::list```, ```std::stack```, ```std::map```,etc.
+- Since vectors are required by the c++ standard to use contiguous memory it is best to add and remove(as opposed to change) from the end of a vector. 
+- While we will deal mostly with ```std::vector``` there are many other types of container/container adaptor  in the STL 
+- such as ```std::list```, ```std::stack```, ```std::map```,etc.
 
 
 ---
 
 
 ## Algorithms
-In this section we explore a few algorithms provided by the STL.
+- In this section we explore a few algorithms provided by the STL.
 
 - ```std::count``` and ```std::count_if``` ([signature](https://en.cppreference.com/w/cpp/algorithm/count))
 
@@ -1130,7 +1138,9 @@ struct is_odd{
  }
 };
 ```
+
 ---
+
 
 ```cpp
 int main(){
@@ -1146,13 +1156,16 @@ int main(){
 ---
 
 
-As you can see count_if takes a unary predicate as a third parameter and this can be  either a function pointer or a function object. Recall, a function object is one that defines an operator().
-[click here to run](https://godbolt.org/z/nY35hr)
+- ```count_if``` takes a unary predicate as a third parameter and this can be  either a function pointer or a function object. 
+- Recall, a function object is one that defines an operator().
+
+- [click here to run](https://godbolt.org/z/nY35hr)
 
 ---
 
 
-- ```std::find``` and ```std::find_if``` [reference](https://en.cppreference.com/w/cpp/algorithm/find). Find the __first__ occurrence of an object in a container and returns an iterator pointing to it.
+- ```std::find``` and ```std::find_if``` [reference](https://en.cppreference.com/w/cpp/algorithm/find). 
+- Find the __first__ occurrence of an object in a container and returns an iterator pointing to it.
 
 ---
 
@@ -1184,7 +1197,10 @@ You can try it [here](https://godbolt.org/z/75jKq7)
 
 - ```std::remove```, ```std::remove_if``` and ```std::erase```
 
-The STL functions ```std::remove``` and ```std::remove_if``` do __not__ remove anything. They just partition the input range into a left part which contains the original objects, in the same order, where the desired object is removed, and a right part which contains "non useful" objects: either the one to be removed or additional copies of the already existing objects.
+- The STL functions ```std::remove``` and ```std::remove_if``` do __not__ remove anything. 
+- They just partition the input range into two parts
+-  a left part which contains the original objects, in the same order, where the desired object is removed, 
+- a right part which contains "non useful" objects: either the one to be removed or additional copies of the already existing objects.
 
 ---
 
@@ -1205,8 +1221,9 @@ int main(){
 
 ---
 
-As you might have guessed ```std::remove_if``` works the same way but using a predicate instead of a value.
-These two functions are useful, especially, for the remove-erase idiom. Once we have the "useful" range with the desired object removed from it we can actually erase it.
+- ```std::remove_if``` works the same way but using a predicate instead of a value.
+- These two functions are useful, especially, for the __remove-erase idiom__. 
+- Once we have the "useful" range with the desired object removed from it we can actually erase it.
 
 ---
 
@@ -1227,10 +1244,9 @@ You can try it [here](https://godbolt.org/z/6h9M9T)
 
 ---
 
+- Sometimes we need to print all the values in a container using a range-based for loop and auto.
+- We can type a little less if we defined an operator ```<<``` that can handle containers.
 
-
-In many situation we need to print all the values in a container using a range-based for loop and auto.
-We can type a little less if we defined an operator ```<<``` that can handle containers.
 ```cpp
 template<typename Ostream,typename Container>
 Ostream& operator<<(Ostream& os,Container& c) {
@@ -1242,8 +1258,9 @@ Ostream& operator<<(Ostream& os,Container& c) {
 
 ---
 
-The above works well with all sorts of containers, except with strings since will will print a string
-as characters separated by commas. We can fix this by using template specialization
+- The above works well with all sorts of containers, except with strings
+- In that case it will print it  as characters separated by commas. 
+- We can fix this by using template specialization
 
 ---
 
@@ -1262,10 +1279,10 @@ std::ostream& operator<< <std::ostream, std::string>
 
 ## substrings and subranges
 
-The ```std::string``` class has a convenient member ```std::string::find``` which returns the position of
-the first character of the substring in the string if found, and ```std::string::npos``` otherwise. 
-A general "substring" finding method is ```std::search``` which will find a "subrange" in any container,
-including strings.
+- The ```std::string``` class has a convenient member ```std::string::find```
+- it returns the position of the first character of the substring in the string if found
+- and ```std::string::npos``` otherwise. 
+- A general "substring" finding method is ```std::search``` which will find a "subrange" in any container, including strings.
 
 ---
 
@@ -1289,7 +1306,9 @@ int main(){
 
 ### Lambda expressions
 
-As we saw, many algorithms, especially in STL, take a __callable__ object as a parameter.  Lambda expression are a convenient way to define such a callable object. We rewrite the previous example using lambda expressions.
+- As we saw, many algorithms, especially in STL, take a __callable__ object as a parameter.  
+- __Lambda expressions__ are a convenient way to define such a callable object. 
+- We rewrite the previous example using lambda expressions.
 
 ---
 
@@ -1314,9 +1333,13 @@ int main(){
 
 ---
 
-The brackets "[]" introduces the lambda expression, sometimes called the capture list. The "()" are the parameters passed to the expression, very similar to function arguments. Finally, between "{" and "}" is the body.
+- The brackets "[]" introduces the lambda expression, sometimes called the capture list. 
+- The "()" are the parameters passed to the expression,  similar to function arguments. 
+- Finally, between "{" and "}" is the body.
 
-Note the __capture__ of the variable _val_. We could have used "[&val]" to capture it by reference. If we want to capture all the variables we use "[=]" and by reference "[&]".
+- Note the __capture__ of the variable _val_. 
+- We could have used "[&val]" to capture it by reference. 
+- If we want to capture all the variables we use "[=]" and by reference "[&]".
 
 
 
