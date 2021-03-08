@@ -661,7 +661,85 @@ void threadf(int i, Duration d) {
 ## Parallel mergesort
 
 - In this example we use a barrier to implement a parallel version of merge sort
+- The basic strategy is similar to what we have done before.
+- But in this case we need the threads to wait for each other after each "step"
+- 
 
 ## Futures/Promises
 
-  
+ - C++ provides us with another tools to perform asynchronous work: tasks.
+ - A task consists of a communication channel with a two endpoints:  __promise__ and __future__. 
+ - The computation results is set in the __promise__ part and retrieved in the __future__ part.
+
+ ---
+
+ ### Simple example
+ - We introduce the promise/future concept with a trivial example.
+
+ ```cpp
+ #include <future>
+
+ std::future<int>  useless(int val) {
+	std::promise<int> p;
+	p.set_value(2 * val);
+	return p.get_future();
+}
+int main() {
+	std::future<int> fut = useless(8);
+	std::cout << fut.get() << "\n";
+}
+```
+
+---
+
+### More realistic example
+
+- In this example we illustrate the usage of promise/future to get the result of the computation of a thread
+- Notice that the call to ```std::promise::get()``` blocks until the result is available.
+
+```cpp
+void threadf(std::promise<int> p) {
+	std::this_thread::sleep_for(5s);
+	p.set_value(19);
+}
+int main() {
+	std::promise<int> prom;
+	std::future<int> fut = prom.get_future();
+	std::thread t(threadf, std::move(prom));
+	std::cout << "waiting for result\n";
+	std::cout << fut.get() << "\n";
+	t.join(); 
+}
+```
+
+### Using async
+
+- Instead of managing our own threads, C++ provides us with ```std::async```
+- Below we show an example where an asynchronous call is made to function ```asyncf```
+- The return value of ```asyncf``` is encapsulated in the future returned by ```async```
+- Instead of blocking until ```asyncf``` returns, we can perform some work
+- Every once and a while we check if the return value is available.
+
+---
+
+```cpp
+int asyncf(int val) {
+	std::this_thread::sleep_for(5s);
+	return 2 * val;
+}
+int main()
+{
+	std::future<int> fut = std::async(asyncf, 23);
+	std::future_status status;
+	do {
+		std::cout << "Result not ready. Please wait.\n";
+		status = fut.wait_for(1s);
+	} while (status != std::future_status::ready);
+	std::cout << fut.get() << "\n";
+}
+```
+
+### Downloading files using async
+
+- In this example, we use libcurl to asynchronously download a file
+- The easiest way to install libcurl using vcpkg (https://github.com/Microsoft/vcpkg)
