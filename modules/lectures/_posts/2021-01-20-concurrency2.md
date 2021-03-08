@@ -456,10 +456,11 @@ void sub(std::atomic<int> & val) {
 }
 ```
 ## Condition Variables
+
 Condition variables allow  threads to wait for events. The C++ library provides two versions of condition variables, 
 ```std::condition_variable``` and ```std::condition_variable_any```, both defined in the header ```<condition_variable>```. In this course we will use the first version only.
 
-A condition variable, _cv_, is used in conjunction with a ```std::unique_lock```. We have mentioned before that 
+A __condition variable__, _cv_, is used in conjunction with a ```std::unique_lock```. We have mentioned before that 
 a unique_lock has a richer interface than ```std::lock_guard```. One of the additional features is the ability to explicitly lock and unlock the mutex it holds,  in addition to the implicit lock/unlock operations done when constructed and destructed. Typical usage :
 ```cpp
 /* global declarations */
@@ -473,33 +474,272 @@ cv.wait(lck);
 The call to ```cv.wait(lck)``` does the following:
 
 1. calls ```lck.unlock()```.
-1. blocks thread and adds it to list of threads waiting on *this
+1. blocks thread and adds it to list of threads waiting on _*this_
 
 When _cv_ receives notification :
 
 1. wake up thread
 1. calls lck.lock()
-The logic of condition variables is implemented mainly in the ```std::condition_variable::wait()``` function.
+
+Usually, another version of ```wait``` is used, ```std::condition_variable::wait()``` .
 
 ```cpp
 template<typename Predicate >
 void wait( std::unique_lock<std::mutex>& lck, Predicate pred );
 
 ```
+The above is equivalent to 
 
-```wait``` executes as follows:
-1. If  _pred_ returns true, _wait_ returns.
-1. If _pred_ returns false, _wait_ unlocks _lck_ and puts the calling thread in waiting state.
-1. When the condition variable is notified (see later) _wait_ reacquires _lck_ and wakes up the thread. 
+```cpp
+while(!pred()){
+    wait(lck);
+}
+```
+----
+
+### Simple example
+
+- We use condition variables to implement a simple example
+- A reader thread receives notification when a writer is done
+
+```cpp
+using namespace std::literals::chrono_literals;
+#include <condition_variable>
+std::mutex m;
+std::condition_variable condVar;
+
+bool ready{ false };
+
+void writeT() {
+	std::unique_lock<std::mutex> lck(m);
+	ready = true;
+	std::cout << "wrote data\n";
+	condVar.notify_one();
+	std::this_thread::sleep_for(10s);
+	std::cout << "writer finished\n";
+}
+void readT() {
+	std::cout << "Waiting for data\n";
+
+	std::unique_lock<std::mutex> lck(m);
+	condVar.wait(lck, []() {return ready; });
+	std::cout << "Data received \n";
+}
+```
+
+---
+
+```
+### Main funtion 
+
+```cpp
+int main() {
+	std::thread t1(readT);
+	std::this_thread::sleep_for(10s);
+	std::thread t2(writeT);
+	t1.join();
+	t2.join();
+}
+```
+
+---
+
+### Another example
+
+- We illustrate the detailed working of conditions variables 
+- with a slightly more complicated version of the previous example
+
+
+---
+
+
+```cpp
+void threadf() {
+	std::this_thread::sleep_for(5s);
+
+	std::unique_lock<std::mutex> lck(m);
+	std::cout << "F started\t " << currentT() << "\n";
+	std::this_thread::sleep_for(5s);
+	condVar.notify_one();
+	std::cout << "notification sent\t" << currentT() << "\n";
+	lck.unlock();
+	std::this_thread::sleep_for(1s);
+	lck.lock();
+	std::cout << "F is done\t" << currentT() << "\n";
+}
+void threadg() {
+	std::unique_lock<std::mutex> lck(m);
+	std::cout << "Waiting for F\n";
+	currentT();//initialize clock
+	condVar.wait(lck);
+	std::cout << "notification received \t" << currentT() << "\n";
+	std::this_thread::sleep_for(5s);
+	std::cout << "G is done \t" << currentT() << "\n";
+
+}
+```
+
+---
+
+```cpp
+int main() {
+	std::thread t1(threadf);
+	std::thread t2(threadg);
+	t1.join();
+	t2.join();
+}
+
+```
 ## Barriers
 
+A __barrier__ is a general synchronization method to ensure that 
+- The "next" step of computation does __not__ start until all threads have finished the previous step
+- A barrier can be implemented using condition variables.
+- C++20 introduced a barrier class.
+
+---
+
+### Barrier using Condition Variables
+
+```cpp
+using Duration = std::chrono::seconds;
+int num_threads = 10;
+std::mutex m;
+std::condition_variable condVar;
+int count = 0;
+
+void threadf(int i,Duration d) {
+    std::this_thread::sleep_for(d);
+    std::cout << i << " started\n";
+    std::unique_lock<std::mutex> lck(m);
+    ++count;
+    condVar.wait(lck, []() {return count == num_threads; });
+    condVar.notify_one();
+    std::cout << i << " ended\n";
+
+}
+```
+
+---
+
+```cpp
+int main()
+{
+    std::random_device rd;
+    std::uniform_int_distribution<> dist(1, 5);
+    std::vector<std::thread> mythreads;
+    for (int i = 0; i < num_threads - 1; ++i)
+        mythreads.push_back(
+            std::thread(threadf, i, Duration(dist(rd)))
+        );
+    /* let them wait for the last thread */
+    mythreads.push_back(
+        std::thread(threadf, num_threads - 1, Duration(15))
+    );
+    for (auto& t:mythreads)
+        t.join();
+}
+```
+
+### Using C++20 barrier class
+
+- In C++20 we can use a barrier class defined in ```<barrier>```
+- the main function is the same as before, the ```threadf``` is modified as follows
+```cpp
+#include <barrier>
+std::barrier barrier{ num_threads };
+void threadf(int i, Duration d) {
+    std::this_thread::sleep_for(d);
+    std::cout << i << " started\n";
+    barrier.arrive_and_wait();
+    std::cout << i << " ended\n";
+}
+```
+
+---
 
 ## Parallel mergesort
 
+- In this example we use a barrier to implement a parallel version of merge sort
+- The basic strategy is similar to what we have done before.
+- But in this case we need the threads to wait for each other after each "step"
+- 
+
 ## Futures/Promises
 
-  
-  
-  
-  
-  
+ - C++ provides us with another tools to perform asynchronous work: tasks.
+ - A task consists of a communication channel with a two endpoints:  __promise__ and __future__. 
+ - The computation results is set in the __promise__ part and retrieved in the __future__ part.
+
+ ---
+
+ ### Simple example
+ - We introduce the promise/future concept with a trivial example.
+
+ ```cpp
+ #include <future>
+
+ std::future<int>  useless(int val) {
+	std::promise<int> p;
+	p.set_value(2 * val);
+	return p.get_future();
+}
+int main() {
+	std::future<int> fut = useless(8);
+	std::cout << fut.get() << "\n";
+}
+```
+
+---
+
+### More realistic example
+
+- In this example we illustrate the usage of promise/future to get the result of the computation of a thread
+- Notice that the call to ```std::promise::get()``` blocks until the result is available.
+
+```cpp
+void threadf(std::promise<int> p) {
+	std::this_thread::sleep_for(5s);
+	p.set_value(19);
+}
+int main() {
+	std::promise<int> prom;
+	std::future<int> fut = prom.get_future();
+	std::thread t(threadf, std::move(prom));
+	std::cout << "waiting for result\n";
+	std::cout << fut.get() << "\n";
+	t.join(); 
+}
+```
+
+### Using async
+
+- Instead of managing our own threads, C++ provides us with ```std::async```
+- Below we show an example where an asynchronous call is made to function ```asyncf```
+- The return value of ```asyncf``` is encapsulated in the future returned by ```async```
+- Instead of blocking until ```asyncf``` returns, we can perform some work
+- Every once and a while we check if the return value is available.
+
+---
+
+```cpp
+int asyncf(int val) {
+	std::this_thread::sleep_for(5s);
+	return 2 * val;
+}
+int main()
+{
+	std::future<int> fut = std::async(asyncf, 23);
+	std::future_status status;
+	do {
+		std::cout << "Result not ready. Please wait.\n";
+		status = fut.wait_for(1s);
+	} while (status != std::future_status::ready);
+	std::cout << fut.get() << "\n";
+}
+```
+
+### Downloading files using async
+
+- In this example, we use libcurl to asynchronously download a file
+- The easiest way to install libcurl using vcpkg (https://github.com/Microsoft/vcpkg)
