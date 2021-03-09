@@ -361,7 +361,7 @@ Producer.
 
 A few runs of the above program produce an output similar to the image below
 
-![Figure 1](figs/deadlock.png)
+![Figure 1](/img/deadlock.png)
 
 As you can see, in all the runs above, the threads could not complete the 150 "read/write" operations before
 entering in a deadlock. 
@@ -491,9 +491,15 @@ int main()
 ```
 
 ---
-As one can see, in the above example, the writer calls ```shared_mutex::lock()``` which is an attempt to gain __exclusive__ access to the lock. If successful, all calls to ```lock``` __and__ ```lock_shared``` are blocked until
-the writer releases the lock. The readers call ```shared_mutex::lock_shared```, which is an attempt to gain __shared__
-access to the lock. If successful, all calls to ```lock``` are blocked whereas calls to ```lock_shared``` are allowed.
+
+### Explanation
+
+- in the above example, the writer calls ```shared_mutex::lock()``` which is an attempt to gain __exclusive__ access to the lock. 
+- If successful, all calls to ```lock``` __and__ ```lock_shared``` are blocked until
+the writer releases the lock. 
+- The readers call ```shared_mutex::lock_shared```, which is an attempt to gain __shared__
+access to the lock. 
+- If successful, all calls to ```lock``` are blocked whereas calls to ```lock_shared``` are allowed.
   
 ---
 
@@ -508,6 +514,7 @@ access to the lock. If successful, all calls to ```lock``` are blocked whereas c
 
 ---
 
+### Example
 In the reader/writers problem we could modify the reader as follows:
 1. replace ```wrt.lock_shared();``` with ```std::shared_lock<std::shared_mutex> lck(wrt);```
 1. remove ```wrt.unlock_shared();```.
