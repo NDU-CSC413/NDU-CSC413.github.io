@@ -775,7 +775,7 @@ The steps are as follows:
 
 ---
 
-![fig](figs/merge.png)
+![fig](/img/merge.png)
 
 ---
 
