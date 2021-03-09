@@ -359,14 +359,13 @@ Producer.
 
 ---
 
-A few runs of the above program produce an output similar to the image below
+- A few runs of the above program produce an output similar to the image below
 
 ![Figure 1](/img/deadlock.png)
 
-As you can see, in all the runs above, the threads could not complete the 150 "read/write" operations before
+- in all the runs above, the threads could not complete the 150 "read/write" operations before
 entering in a deadlock. 
-
-A rule of thumb is to always lock mutexes in the __same order__.
+- A rule of thumb is to always lock mutexes in the __same order__.
 
 ---
 
