@@ -369,7 +369,7 @@ a wrapper object around a <code>std::mutex</code>.</li>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="22">
 <p>A few runs of the above program produce an output similar to the image below</p>
-<p><img src="figs/deadlock.png" alt="Figure 1" /></p>
+<p><img src="/img/deadlock.png" alt="Figure 1" /></p>
 <p>As you can see, in all the runs above, the threads could not complete the 150 &quot;read/write&quot; operations before<br />
 entering in a deadlock.</p>
 <p>A rule of thumb is to always lock mutexes in the <strong>same order</strong>.</p>
@@ -487,9 +487,15 @@ multiple threads can share the ownership.</p>
 </span></span></foreignObject></svg></code></pre>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="28">
-<p>As one can see, in the above example, the writer calls <code>shared_mutex::lock()</code> which is an attempt to gain <strong>exclusive</strong> access to the lock. If successful, all calls to <code>lock</code> <strong>and</strong> <code>lock_shared</code> are blocked until<br />
-the writer releases the lock. The readers call <code>shared_mutex::lock_shared</code>, which is an attempt to gain <strong>shared</strong><br />
-access to the lock. If successful, all calls to <code>lock</code> are blocked whereas calls to <code>lock_shared</code> are allowed.</p>
+<h3>Explanation</h3>
+<ul>
+<li>in the above example, the writer calls <code>shared_mutex::lock()</code> which is an attempt to gain <strong>exclusive</strong> access to the lock.</li>
+<li>If successful, all calls to <code>lock</code> <strong>and</strong> <code>lock_shared</code> are blocked until<br />
+the writer releases the lock.</li>
+<li>The readers call <code>shared_mutex::lock_shared</code>, which is an attempt to gain <strong>shared</strong><br />
+access to the lock.</li>
+<li>If successful, all calls to <code>lock</code> are blocked whereas calls to <code>lock_shared</code> are allowed.</li>
+</ul>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="29">
 <h2>std::(unique/shared)_lock</h2>
@@ -502,6 +508,7 @@ access to the lock. If successful, all calls to <code>lock</code> are blocked wh
 </ul>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="30">
+<h3>Example</h3>
 <p>In the reader/writers problem we could modify the reader as follows:</p>
 <ol>
 <li>replace <code>wrt.lock_shared();</code> with <code>std::shared_lock&lt;std::shared_mutex&gt; lck(wrt);</code></li>
