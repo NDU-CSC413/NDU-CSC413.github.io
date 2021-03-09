@@ -736,8 +736,26 @@ int main() {
 <li>In this example we use a barrier to implement a parallel version of merge sort</li>
 <li>The basic strategy is similar to what we have done before.</li>
 <li>But in this case we need the threads to wait for each other after each &quot;step&quot;</li>
-<li></li>
+<li>The steps are shown in the figure below, starting from the bottom.</li>
+<li>The example in the figure uses 4 threads, so initially the range is divided into <strong>four</strong> subranges.</li>
 </ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="41">
+<p>The steps are as follows:</p>
+<ol>
+<li>Each thread sorts the corresponding range: 0-1,1-2,2-3,3-4</li>
+<li>All thread wait for each other using a <strong>barrier</strong></li>
+<li>If the thread index is even it continues, otherwise it exits</li>
+<li>In the figure, threads 0,2 continue, 1 and 3 exit</li>
+<li>The thread divides its index by 2: 0/2=0,2/2=1</li>
+<li>Each thread <strong>merges</strong> its range and the one to the &quot;right&quot;</li>
+<li>goto step 2</li>
+</ol>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="42">
+<p><img src="figs/merge.png" alt="fig" /></p>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="43">
 <h2>Futures/Promises</h2>
 <ul>
 <li>C++ provides us with another tools to perform asynchronous work: tasks.</li>
@@ -745,7 +763,7 @@ int main() {
 <li>The computation results is set in the <strong>promise</strong> part and retrieved in the <strong>future</strong> part.</li>
 </ul>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="41">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="44">
 <h3>Simple example</h3>
 <ul>
 <li>We introduce the promise/future concept with a trivial example.</li>
@@ -763,7 +781,7 @@ int main() {
 }
 </span></span></foreignObject></svg></code></pre>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="42">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="45">
 <h3>More realistic example</h3>
 <ul>
 <li>In this example we illustrate the usage of promise/future to get the result of the computation of a thread</li>
@@ -791,7 +809,7 @@ int main() {
 <li>Every once and a while we check if the return value is available.</li>
 </ul>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="43">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="46">
 <pre><code class="language-cpp"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">asyncf</span><span class="hljs-params">(<span class="hljs-keyword">int</span> val)</span> </span>{
 	<span class="hljs-built_in">std</span>::this_thread::sleep_for(<span class="hljs-number">5</span>s);
 	<span class="hljs-keyword">return</span> <span class="hljs-number">2</span> * val;
