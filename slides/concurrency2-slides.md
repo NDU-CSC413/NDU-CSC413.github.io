@@ -499,14 +499,14 @@ access to the lock. If successful, all calls to ```lock``` are blocked whereas c
 
 
 ## std::(unique/shared)_lock
-  
  
 - These lock a ```std::shared_mutex``` in a exclusive/shared modes.
 -  A ```std::unique_lock``` has a richer interface than ```std::lock_guard```. 
-- In all situations a ```lock_guard``` can be replaced by a ```unique_lock``` but not the other
-way around. 
+- In all situations a ```lock_guard``` can be replaced by a ```unique_lock``` but not the other way around. 
 - For example, the mutex held by a ```std::lock_guard``` will be released __only__ when the lock_guard is destructed - whereas ```std::unique_lock``` has an ```unlock()``` member function. 
 - This comes in handy in many situations, particularly, as we will see later, when used with __condition variables__.
+
+---
 
 In the reader/writers problem we could modify the reader as follows:
 1. replace ```wrt.lock_shared();``` with ```std::shared_lock<std::shared_mutex> lck(wrt);```
