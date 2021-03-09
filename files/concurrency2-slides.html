@@ -368,11 +368,15 @@ a wrapper object around a <code>std::mutex</code>.</li>
 </span></span></foreignObject></svg></code></pre>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="22">
-<p>A few runs of the above program produce an output similar to the image below</p>
+<ul>
+<li>A few runs of the above program produce an output similar to the image below</li>
+</ul>
 <p><img src="/img/deadlock.png" alt="Figure 1" /></p>
-<p>As you can see, in all the runs above, the threads could not complete the 150 &quot;read/write&quot; operations before<br />
-entering in a deadlock.</p>
-<p>A rule of thumb is to always lock mutexes in the <strong>same order</strong>.</p>
+<ul>
+<li>in all the runs above, the threads could not complete the 150 &quot;read/write&quot; operations before<br />
+entering in a deadlock.</li>
+<li>A rule of thumb is to always lock mutexes in the <strong>same order</strong>.</li>
+</ul>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="23">
 <h2>Readers-Writers</h2>
