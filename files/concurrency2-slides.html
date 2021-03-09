@@ -552,10 +552,18 @@ we modify the code as follows:</p>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="32">
 <h2>Condition Variables</h2>
-<p>Condition variables allow  threads to wait for events. The C++ library provides two versions of condition variables,<br />
-<code>std::condition_variable</code> and <code>std::condition_variable_any</code>, both defined in the header <code>&lt;condition_variable&gt;</code>. In this course we will use the first version only.</p>
-<p>A <strong>condition variable</strong>, <em>cv</em>, is used in conjunction with a <code>std::unique_lock</code>. We have mentioned before that<br />
-a unique_lock has a richer interface than <code>std::lock_guard</code>. One of the additional features is the ability to explicitly lock and unlock the mutex it holds,  in addition to the implicit lock/unlock operations done when constructed and destructed. Typical usage :</p>
+<ul>
+<li>Condition variables allow  threads to wait for events.</li>
+<li>The C++ library provides two versions of condition variables,<br />
+<code>std::condition_variable</code> and <code>std::condition_variable_any</code>, both defined in the header <code>&lt;condition_variable&gt;</code>.</li>
+<li>In this course we will use the first version only.</li>
+<li>A <strong>condition variable</strong>, <em>cv</em>, is used in conjunction with a <code>std::unique_lock</code>.</li>
+<li>We have mentioned before that  a unique_lock has a richer interface than <code>std::lock_guard</code>.</li>
+<li>One of the additional features is the ability to explicitly lock and unlock the mutex it holds,  in addition to the implicit lock/unlock operations done when constructed and destructed.</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="33">
+<p>Typical usage :</p>
 <pre><code class="language-cpp"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-comment">/* global declarations */</span>
 <span class="hljs-built_in">std</span>::mutex m;
 <span class="hljs-built_in">std</span>::condition_variable vc;
@@ -563,6 +571,8 @@ a unique_lock has a richer interface than <code>std::lock_guard</code>. One of t
 <span class="hljs-function"><span class="hljs-built_in">std</span>::unique_lock&lt;<span class="hljs-built_in">std</span>::mutex&gt; <span class="hljs-title">lck</span><span class="hljs-params">(m)</span></span>;
 cv.wait(lck);
 </span></span></foreignObject></svg></code></pre>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="34">
 <p>The call to <code>cv.wait(lck)</code> does the following:</p>
 <ol>
 <li>calls <code>lck.unlock()</code>.</li>
@@ -573,6 +583,8 @@ cv.wait(lck);
 <li>wake up thread</li>
 <li>calls lck.lock()</li>
 </ol>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="35">
 <p>Usually, another version of <code>wait</code> is used, <code>std::condition_variable::wait()</code> .</p>
 <pre><code class="language-cpp"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-function"><span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">typename</span> Predicate &gt;
 <span class="hljs-keyword">void</span> <span class="hljs-title">wait</span><span class="hljs-params">( <span class="hljs-built_in">std</span>::unique_lock&lt;<span class="hljs-built_in">std</span>::mutex&gt;&amp; lck, Predicate pred )</span></span>;
@@ -584,14 +596,13 @@ cv.wait(lck);
 }
 </span></span></foreignObject></svg></code></pre>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="33">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="36">
 <h3>Simple example</h3>
 <ul>
 <li>We use condition variables to implement a simple example</li>
 <li>A reader thread receives notification when a writer is done</li>
 </ul>
-<pre><code class="language-cpp"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>::literals::chrono_literals;
-<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;condition_variable&gt;</span></span>
+<pre><code class="language-cpp"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;condition_variable&gt;</span></span>
 <span class="hljs-built_in">std</span>::mutex m;
 <span class="hljs-built_in">std</span>::condition_variable condVar;
 
@@ -607,34 +618,31 @@ cv.wait(lck);
 }
 <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">readT</span><span class="hljs-params">()</span> </span>{
 	<span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">&quot;Waiting for data\n&quot;</span>;
-
 	<span class="hljs-function"><span class="hljs-built_in">std</span>::unique_lock&lt;<span class="hljs-built_in">std</span>::mutex&gt; <span class="hljs-title">lck</span><span class="hljs-params">(m)</span></span>;
 	condVar.wait(lck, []() {<span class="hljs-keyword">return</span> ready; });
 	<span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">&quot;Data received \n&quot;</span>;
 }
 </span></span></foreignObject></svg></code></pre>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="34">
-<pre><code><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap>### Main funtion 
-
-```cpp
-int main() {
-	std::thread t1(readT);
-	std::this_thread::sleep_for(10s);
-	std::thread t2(writeT);
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="37">
+<h3>Main function</h3>
+<pre><code class="language-cpp"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+	<span class="hljs-function"><span class="hljs-built_in">std</span>::thread <span class="hljs-title">t1</span><span class="hljs-params">(readT)</span></span>;
+	<span class="hljs-built_in">std</span>::this_thread::sleep_for(<span class="hljs-number">10</span>s);
+	<span class="hljs-function"><span class="hljs-built_in">std</span>::thread <span class="hljs-title">t2</span><span class="hljs-params">(writeT)</span></span>;
 	t1.join();
 	t2.join();
 }
 </span></span></foreignObject></svg></code></pre>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="35">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="38">
 <h3>Another example</h3>
 <ul>
 <li>We illustrate the detailed working of conditions variables</li>
 <li>with a slightly more complicated version of the previous example</li>
 </ul>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="36">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="39">
 <pre><code class="language-cpp"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">threadf</span><span class="hljs-params">()</span> </span>{
 	<span class="hljs-built_in">std</span>::this_thread::sleep_for(<span class="hljs-number">5</span>s);
 
@@ -660,7 +668,7 @@ int main() {
 }
 </span></span></foreignObject></svg></code></pre>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="37">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="40">
 <pre><code class="language-cpp"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
 	<span class="hljs-function"><span class="hljs-built_in">std</span>::thread <span class="hljs-title">t1</span><span class="hljs-params">(threadf)</span></span>;
 	<span class="hljs-function"><span class="hljs-built_in">std</span>::thread <span class="hljs-title">t2</span><span class="hljs-params">(threadg)</span></span>;
@@ -677,7 +685,7 @@ int main() {
 <li>C++20 introduced a barrier class.</li>
 </ul>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="38">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="41">
 <h3>Barrier using Condition Variables</h3>
 <pre><code class="language-cpp"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-keyword">using</span> Duration = <span class="hljs-built_in">std</span>::chrono::seconds;
 <span class="hljs-keyword">int</span> num_threads = <span class="hljs-number">10</span>;
@@ -697,7 +705,7 @@ int main() {
 }
 </span></span></foreignObject></svg></code></pre>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="39">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="42">
 <pre><code class="language-cpp"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span>
 </span>{
     <span class="hljs-built_in">std</span>::random_device rd;
@@ -715,6 +723,8 @@ int main() {
         t.join();
 }
 </span></span></foreignObject></svg></code></pre>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="43">
 <h3>Using C++20 barrier class</h3>
 <ul>
 <li>In C++20 we can use a barrier class defined in <code>&lt;barrier&gt;</code></li>
@@ -730,7 +740,7 @@ int main() {
 }
 </span></span></foreignObject></svg></code></pre>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="40">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="44">
 <h2>Parallel mergesort</h2>
 <ul>
 <li>In this example we use a barrier to implement a parallel version of merge sort</li>
@@ -740,7 +750,7 @@ int main() {
 <li>The example in the figure uses 4 threads, so initially the range is divided into <strong>four</strong> subranges.</li>
 </ul>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="41">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="45">
 <p>The steps are as follows:</p>
 <ol>
 <li>Each thread sorts the corresponding range: 0-1,1-2,2-3,3-4</li>
@@ -752,10 +762,10 @@ int main() {
 <li>goto step 2</li>
 </ol>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="42">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="46">
 <p><img src="/img/merge.png" alt="fig" /></p>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="43">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="47">
 <h2>Futures/Promises</h2>
 <ul>
 <li>C++ provides us with another tools to perform asynchronous work: tasks.</li>
@@ -763,7 +773,7 @@ int main() {
 <li>The computation results is set in the <strong>promise</strong> part and retrieved in the <strong>future</strong> part.</li>
 </ul>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="44">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="48">
 <h3>Simple example</h3>
 <ul>
 <li>We introduce the promise/future concept with a trivial example.</li>
@@ -781,7 +791,7 @@ int main() {
 }
 </span></span></foreignObject></svg></code></pre>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="45">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="49">
 <h3>More realistic example</h3>
 <ul>
 <li>In this example we illustrate the usage of promise/future to get the result of the computation of a thread</li>
@@ -800,6 +810,8 @@ int main() {
 	t.join(); 
 }
 </span></span></foreignObject></svg></code></pre>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="50">
 <h3>Using async</h3>
 <ul>
 <li>Instead of managing our own threads, C++ provides us with <code>std::async</code></li>
@@ -809,7 +821,7 @@ int main() {
 <li>Every once and a while we check if the return value is available.</li>
 </ul>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="46">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="51">
 <pre><code class="language-cpp"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">asyncf</span><span class="hljs-params">(<span class="hljs-keyword">int</span> val)</span> </span>{
 	<span class="hljs-built_in">std</span>::this_thread::sleep_for(<span class="hljs-number">5</span>s);
 	<span class="hljs-keyword">return</span> <span class="hljs-number">2</span> * val;
