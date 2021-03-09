@@ -551,13 +551,20 @@ void sub(std::atomic<int> & val) {
 ```
 
 ---
+
 ## Condition Variables
 
-Condition variables allow  threads to wait for events. The C++ library provides two versions of condition variables, 
-```std::condition_variable``` and ```std::condition_variable_any```, both defined in the header ```<condition_variable>```. In this course we will use the first version only.
+- Condition variables allow  threads to wait for events. 
+- The C++ library provides two versions of condition variables, 
+```std::condition_variable``` and ```std::condition_variable_any```, both defined in the header ```<condition_variable>```. 
+- In this course we will use the first version only.
+- A __condition variable__, _cv_, is used in conjunction with a ```std::unique_lock```. 
+- We have mentioned before that  a unique_lock has a richer interface than ```std::lock_guard```.
+- One of the additional features is the ability to explicitly lock and unlock the mutex it holds,  in addition to the implicit lock/unlock operations done when constructed and destructed. 
 
-A __condition variable__, _cv_, is used in conjunction with a ```std::unique_lock```. We have mentioned before that 
-a unique_lock has a richer interface than ```std::lock_guard```. One of the additional features is the ability to explicitly lock and unlock the mutex it holds,  in addition to the implicit lock/unlock operations done when constructed and destructed. Typical usage :
+---
+
+Typical usage :
 ```cpp
 /* global declarations */
 std::mutex m;
@@ -566,6 +573,8 @@ std::condition_variable vc;
 std::unique_lock<std::mutex> lck(m);
 cv.wait(lck);
 ```
+
+---
 
 The call to ```cv.wait(lck)``` does the following:
 
@@ -576,6 +585,8 @@ When _cv_ receives notification :
 
 1. wake up thread
 1. calls lck.lock()
+
+--- 
 
 Usually, another version of ```wait``` is used, ```std::condition_variable::wait()``` .
 
@@ -599,7 +610,6 @@ while(!pred()){
 - A reader thread receives notification when a writer is done
 
 ```cpp
-using namespace std::literals::chrono_literals;
 #include <condition_variable>
 std::mutex m;
 std::condition_variable condVar;
@@ -616,7 +626,6 @@ void writeT() {
 }
 void readT() {
 	std::cout << "Waiting for data\n";
-
 	std::unique_lock<std::mutex> lck(m);
 	condVar.wait(lck, []() {return ready; });
 	std::cout << "Data received \n";
@@ -625,8 +634,8 @@ void readT() {
 
 ---
 
-```
-### Main funtion 
+
+### Main function 
 
 ```cpp
 int main() {
@@ -737,6 +746,8 @@ int main()
 }
 ```
 
+---
+
 ### Using C++20 barrier class
 
 - In C++20 we can use a barrier class defined in ```<barrier>```
@@ -825,6 +836,8 @@ int main() {
 	t.join(); 
 }
 ```
+
+---
 
 ### Using async
 
