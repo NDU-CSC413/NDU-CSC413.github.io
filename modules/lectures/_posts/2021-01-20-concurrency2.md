@@ -663,8 +663,25 @@ void threadf(int i, Duration d) {
 - In this example we use a barrier to implement a parallel version of merge sort
 - The basic strategy is similar to what we have done before.
 - But in this case we need the threads to wait for each other after each "step"
-- 
+- The steps are shown in the figure below, starting from the bottom.
+- The example in the figure uses 4 threads, so initially the range is divided into __four__ subranges.
 
+---
+
+The steps are as follows:
+1. Each thread sorts the corresponding range: 0-1,1-2,2-3,3-4
+1. All thread wait for each other using a __barrier__
+1. If the thread index is even it continues, otherwise it exits
+1. In the figure, threads 0,2 continue, 1 and 3 exit
+1. The thread divides its index by 2: 0/2=0,2/2=1
+1. Each thread __merges__ its range and the one to the "right"
+1. goto step 2
+
+---
+
+![fig](figs/merge.png)
+
+---
 ## Futures/Promises
 
  - C++ provides us with another tools to perform asynchronous work: tasks.
