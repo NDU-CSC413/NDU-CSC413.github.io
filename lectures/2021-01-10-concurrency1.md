@@ -892,7 +892,7 @@ int main()
 In this section we will compute the value of PI both sequentially and in parallel.
 We will be using the below formula:
 <div style="background-color:white">
-<img src="https://render.githubusercontent.com/render/math?math=\pi=\int_0^1\frac{dx}{1%2Bx^2}"></div>
+<img src="https://render.githubusercontent.com/render/math?math=\pi=4\int_0^1\frac{dx}{1%2Bx^2}"></div>
 
 The basic idea, as in the previous example, is to divide the interval [0,1] into subintervals and compute
 each subinterval in a different thread than combine the results.
