@@ -243,7 +243,7 @@ because smart compilers (when optimization is used) usually optimize it away.
 This problem is common enough that it was given a name: __false sharing__. The basic idea is that even though different
 threads are writing to different locations in the array but those locations are on the same __cache line__ which forces cache invalidation/updates. We illustrate the situation in the figure below. Two threads on different cores, and thus using two different caches, access different locations of the ```results``` array. Even though there is no sharing of variables the array is small enough to fit in one cache line. When one thread updates a value in the array, all cores are notified that the corresponding cache line is invalidated and they reload the array from memory, creating unnecessary and very slow memory traffic.
 
-We can eliminate this effect by using __padding__, i.e. keep enough distance between consecutive values of the results array so that each value is on a __different__ cache line, which is typically 64 bytes ofr x86 and 128bytes for ARM.  Recall that C++ stores two dimensional arrays in row major mode. We can take advantage of that to store values on different cache lines as shown in the modified code below.
+We can eliminate this effect by using __padding__, i.e. keep enough distance between consecutive values of the results array so that each value is on a __different__ cache line, which is typically 64 bytes for x86 and 128 bytes for ARM.  Recall that C++ stores two dimensional arrays in row major mode. We can take advantage of that to store values on different cache lines as shown in the modified code below.
 ![fig](/img/false-sharing.png)
 
 
@@ -282,8 +282,7 @@ int main()
  cache line is 64 bytes so if the array is __properly aligned__ the values in results accessed by each thread are on __different__ cache lines.
 
  
-
- ### Recommendation
+### Recommendation
 
 Rather than padding with the added complexity of alignment it is easier and almost always preferable to use a variable local to the thread in the loop. At the end set the results to that variable.
   ```cpp
@@ -300,15 +299,22 @@ Rather than padding with the added complexity of alignment it is easier and almo
  In the repository cd to the ```false_sharing``` folder and use the following compilation commands:
 
  1. On Windows open a developer power shell  and type
-  ```cl.exe /openmp /nologo /EHsc /DX file_sharing.cpp```
+  
+  ```
+  cl.exe /openmp /nologo /EHsc /DX file_sharing.cpp
+  
+  ```
  2. On Unix/Linux  with GNU C++:
- ```c++ -fopenmp -DX file_sharing.cpp```
+ ```
+ c++ -fopenmp -DX file_sharing.cpp
+ 
+ ```
 
  Where X can take three different values:
- 1. FALSE_SHARING: this case illustrates false sharing. It running time is approximately 4-5 times slower.
- 2. ALIGN: this case uses a 2-d array were each "row" is aligned on a different cache line. This is 4-5 times 
- faster than the previous case.
+ 1. FALSE_SHARING: this case illustrates false sharing. Its running time is approximately 4-5 times slower.
+ 2. ALIGN: this case uses a 2-d array were each "row" is aligned on a different cache line. This is 4-5 times  faster than the previous case.
  3. LOCAL: this case uses a local variable it has the same running time as the previous case.
+
 ## Parallel for
 
 Apart from creating and managing the threads the parallel construct is similar to what we have done with C++ threads. We need to keep track of the thread id and manually divide the work among the threads. OpenMP can help automate the work
@@ -334,7 +340,7 @@ openmp creates local copies of the index i.
 There is an implicit barrier at the end of the loop construct.
 
 ## Nested loops
-The OpenMP ```for construct``` automatically makes the index of the loop immediately after the construct private. Thi does not apply to subsequent loops. In the example below, ```i```
+The OpenMP ```for construct``` automatically makes the index of the loop immediately after the construct private. This does not apply to subsequent loops. In the example below, ```i```
 is automatically privatized whereas ```j``` and ```tmp``` are not so we have to declare them private.
 
 ```cpp
@@ -393,6 +399,7 @@ In this case OpenMP maintains a chunk queue and whenever a thread finishes the c
 1. Thread 2 will process 2,6,10,14 for a total of 32s
 1. Thread 3 will process 3,7,11,15 for a total of 36s
 1. Thread 4 will process 4,8,12,16 for a total of 40s
+
 Therefore the completion time is 40s instead of 58s using the default schedule. Also, one can specify the chunk size, i.e. ```schedule(dynamic,chunk)``` with a default of 1.
 
 ## OpenMP tasks
@@ -487,4 +494,3 @@ The MSVC compiler lags in OpenMP support. The task construct can be enabled by p
 even though it compiles with the above switches MSVC on my computer crashes. So you are better off using clang++.
 Start you Visual Studio installer, under the workloads choose Desktop development for C++ and in the details choose C++ lang tools for windows.
 
-# Thrust
