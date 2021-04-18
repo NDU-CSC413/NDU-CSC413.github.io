@@ -40,7 +40,7 @@ jobs:
         with:
           branch: gh-pages
           folder: lectures
-          target_folder: modules/lectures/_posts
+          target_folder: modules/annotated_code/_posts
           clean: off
           
       - name: Deploy to slides
