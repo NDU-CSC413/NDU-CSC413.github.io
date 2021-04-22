@@ -42,6 +42,13 @@ jobs:
           folder: lectures
           target_folder: modules/annotated_code/_posts
           clean: off
+      - name: Deploy to img
+        uses: JamesIves/github-pages-deploy-action@releases/v3
+        with:
+          branch: gh-pages
+          folder: lectures/figs
+          target_folder: img
+          clean: off
           
       - name: Deploy to slides
         uses: JamesIves/github-pages-deploy-action@releases/v3
