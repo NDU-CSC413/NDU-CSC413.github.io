@@ -1,5 +1,7 @@
 # basic configuration
 markdown: kramdown
+kramdown:
+  math_engine: katex
 permalink: /:categories/:title/
 
 # Change this tracking code with your own tracking code
