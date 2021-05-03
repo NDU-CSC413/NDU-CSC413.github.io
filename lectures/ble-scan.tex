@@ -1,0 +1,23 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{algorithm2e}
+\begin{document}
+    
+By looking at the figure it is clear that the value at node $A$ is the sum of the values of its children.
+The index of node $A$ is at $2^{h+1}-1$ which is the same as its right child. The left child of $A$ has index $2^h-1$. Let $S$ be the array then 
+\begin{align*}
+    S[2^{h+1}-1]=S[2^h-1]+S[2^{h+1}-1]
+\end{align*}
+For node $B$ it is the same except we shift the indices by $2^{h+1}$ to the right.
+Therefore for nodes at level $h+1$ we have 
+\begin{align*}
+    S[k+2^{h+1}-1]=S[k+2^h-1]+S[k+2^{h+1}-1]
+\end{align*}
+where $k$ starts with 0 and is incremented by $2^{h+1}$.
+\begin{algorithm*}
+    \DontPrintSemicolon
+    \ForAll{$k=0,k<n$ multiples of $2^{h+1}$}{
+        $S[k+2^{h+1}-1]=S[k+2^h-1]+S[k+2^{h+1}-1]$\;
+    }
+\end{algorithm*}
+\end{document}

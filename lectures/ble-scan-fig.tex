@@ -1,0 +1,103 @@
+% Red-black tree
+% Author: Madit
+\documentclass{article}
+\usepackage{tikz}
+%%%<
+\usepackage{verbatim}
+\usepackage[active,tightpage]{preview}
+\usetikzlibrary{calc}
+\PreviewEnvironment{tikzpicture}
+\setlength{\PreviewBorder}{10pt}%
+%%%>
+\begin{comment}
+:Title: Red-black tree
+:Tags: Trees;Graphs
+:Author: Madit
+:Slug: red-black-tree
+
+A red-black tree is a special type of binary tree, used in computer science
+to organize pieces of comparable data, such as text fragments or numbers.
+(Wikipedia)
+\end{comment}
+\usetikzlibrary{arrows}
+
+\tikzset{
+  treenode/.style = {align=center, inner sep=0pt, text centered,
+    font=\sffamily},
+  arn_n/.style = {treenode, circle, white, font=\sffamily\bfseries, draw=black,
+    fill=black, text width=1.5em},% arbre rouge noir, noeud noir
+  arn_r/.style = {treenode, circle, black, draw=black, 
+    text width=1.5em, very thick},% arbre rouge noir, noeud rouge
+  arn_x/.style = {treenode, rectangle, draw=black,text width=.5 em,
+    minimum width=0.5em, minimum height=0.5em}% arbre rouge noir, nil
+}
+
+\begin{document}
+\begin{tikzpicture}[<-,>=stealth',level/.style={sibling distance = 5cm/#1,
+  level distance = 1.5cm}] 
+\node [arn_r] {28}
+    child{ node [arn_r] {6} 
+            child{ node [arn_r] {1} 
+            	child{ node [arn_r] {0}}% edge from parent node[above left]
+                         %{$x$}} %for a named pointer
+							child{ node [arn_r] {1}}
+            }
+            child{ node [arn_r] {5}
+							child{ node [arn_r] {2}}
+							child{ node [arn_r] {3}}
+            }                            
+    }
+    child{ node [arn_r] {22}
+            child{ node [arn_r] {9} 
+							child{ node [arn_r] {4}}
+							child{ node [arn_r] {5}}
+            }
+            child{ node [arn_r] {13}
+							child{ node [arn_r] {6}}
+							child{ node [arn_r] {7}}
+            }
+		}
+; 
+\end{tikzpicture}
+\begin{tikzpicture}[level/.style={sibling distance = 3cm/#1,
+  level distance = 1.5cm}] 
+ % \draw (0,0) node {upsweep};
+ \node [arn_x]{}
+child {
+      node [arn_x]{\small A}
+        child { 
+          node (B) [arn_x]{}
+            child {node (BA) [arn_x]{}}
+            child {node (BB) [arn_x]{}}
+        }
+        child {
+          node (C) [arn_x]{}
+            child {node (CA) [arn_x]{}}
+            child {node (CB) [arn_x]{}}
+        }
+      }
+child {
+  node [arn_x]{B}
+    child { 
+      node (D) [arn_x]{}
+        child {node (DA) [arn_x]{}}
+        child {node (DB) [arn_x]{}}
+    }
+    child {
+      node (E) [arn_x]{}
+        child {node (EA) [arn_x]{}}
+        child {node (EB) [arn_x]{}}
+    }
+  }
+;
+\draw (BA) -- (BB);
+\draw (CA) -- (CB);
+\draw[<->] ($(BA)+(0,-0.3)$) -- ($(BB)+(0,-0.3)$) node[midway,below]{$2^h$};
+%\draw[<->] ($(BA)+(-0.3,0)$) -- ($((BA).x-0.3,(B).y)$);
+\draw[<->]($(EB)+(0.3,0)$)--($(EB)+(0.3,3)$) node[midway,right]{$h+1$};
+\draw[<->]($(BA)+(-0.3,0)$)--($(BA)+(-0.3,1.5)$) node[midway,left]{$h$};
+
+\end{tikzpicture}
+
+We check
+\end{document}
