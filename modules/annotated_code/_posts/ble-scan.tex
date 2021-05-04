@@ -20,4 +20,27 @@ where $k$ starts with 0 and is incremented by $2^{h+1}$.
         $S[k+2^{h+1}-1]=S[k+2^h-1]+S[k+2^{h+1}-1]$\;
     }
 \end{algorithm*}
+The above is performed for all values of $h$.
+
+\begin{algorithm*}
+    \DontPrintSemicolon
+    \For{$h=0$ \KwTo $\log n -1$}{
+    \For{$k=0,k<n$ multiples of $2^{h+1}$}{
+        $S[k+2^{h+1}-1]=S[k+2^h-1]+S[k+2^{h+1}-1]$\;
+    }
+    }
+\end{algorithm*}
+Now, multiples of $2^{h+1}$ can be write as $\alpha 2^{h+1}$ with $\alpha=0,\ldots,d-1$ with $d=\frac{n}{2^{h+1}}$.
+\begin{algorithm*}
+    \DontPrintSemicolon
+    \For{$d=\frac{n}{2}$ \KwTo $1$ }{
+        \For{$\alpha=0$ \KwTo $d-1$}{
+            $S[(2\alpha+2)s-1]+=S[(2\alpha +1)s-1]$\;
+            $\alpha=\alpha+1$\;
+        }
+    $s=2*s$\;
+    $d=d/2$\;
+}
+\end{algorithm*}
+
 \end{document}
