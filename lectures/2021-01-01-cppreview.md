@@ -860,6 +860,96 @@ for(int i=0;i<iv.size();i++)
 ```
 
 Since vectors are required by the c++ standard to use contiguous memory it is best to add and remove(as opposed to change) from the end of a vector. While we will deal mostly with ```std::vector``` there are many other types of container/container adaptor  in the STL such as ```std::list```, ```std::stack```, ```std::map```,etc.
+Many algorithms, especially divide and conquer, need to "divide" the range of the container in, typically two parts, and possibly iterate over the elements of each part.
+
+There are many iterator categories defined by the STL (see [iterators](https://en.cppreference.com/w/cpp/iterator)). For our purpose we need to determine if an iterator is a **random access** or not. This can be tested at **compile** time by ```std::random_access_iterator```
+Note the ```constexpr``` below, to force the compiler to evaluate that expression at compile time.
+```cpp
+template <typename Iter>
+void check(Iter itr){
+    if constexpr (std::random_access_iterator<Iter>)
+      std::cout<<"Radom access\n";
+    else 
+      std::cout<<"Not random acccess\n";>>
+}
+```
+While all iterators support ```++itr;--itr;``` only a random access supports ```itr+d;itr-d;``` where ```d``` is an integer and ```itr1-itr2;```.
+
+Suppose, given an iterator ```itr```, we would like to "move" it forward ```d``` places.
+```cpp
+template <typename Iter>
+void move_and_print(Iter itr,int d,Iter end) {
+	std::cout << *itr << ":";
+	if constexpr (std::random_access_iterator<Iter>) {
+		itr = itr + d;
+		if (itr != end)std::cout << "Random access " << *itr << "\n";
+	}
+	else {
+		itr = std::next(itr, d);
+		if (itr != end)std::cout << "Not random access " << *itr << "\n";
+	}
+
+}
+```
+
+As we have mentioned, some problems require iterating over the "right" half of a range forward and the "left" half backward. A "clean" way of implementing this is using a ```std::reverse_iterator``` (for a nice illustration see [reverse_iterator](https://en.cppreference.com/w/cpp/iterator/reverse_iterator))
+```cpp
+template <typename Iter>
+void recurse(Iter start, Iter end) {
+	/* constexpr: evaluate the expr at compile time */
+	Iter mid;
+	if constexpr (std::random_access_iterator<Iter>) {
+		std::cout << "random access: ";
+		auto d = ( end-start) / 2;
+		mid = start+d;
+	}
+	else {
+		std::cout << "not random access: ";
+		auto d = std::distance(start, end);
+		mid = std::next(start, d / 2);
+	}
+	/* iterate from mid to end forward*/
+	for (auto itr = mid; itr != end; ++itr)
+		std::cout << *itr << " ";
+	std::cout << "| ";
+	auto rstart = std::reverse_iterator<Iter>(mid);
+	auto rend = std::reverse_iterator<Iter>(start);
+	for (auto itr = rstart; itr != rend; ++itr)
+		std::cout << *itr << " ";
+	std::cout << "\n";
+}
+```
+Finally, a driver for the above snippets
+
+```cpp
+
+int main() {
+	std::vector<int> u { 1,2,3,4,5,6 };
+	std::list<std::string> v = { "one","two","three","four","five","six" };
+	std::map<std::string, int> m{ {"one",1},{"two",2},{"three",3},{"four",4},{"five",5},{"six",6} };
+	auto ubegin = u.begin();// points to 1
+	auto vbegin = v.begin();// points to "one"
+	/**
+	 * a vector iterator supports random access
+	 */
+	move_and_print(u.begin(),5,u.end());
+	
+	/**
+	 * a list or a map iterator DOES NOT support random access
+	 * The commented-out statement below will give an error
+	 * instead we use std::next
+	 */
+	//	std::list<std::string>::iterator vitr = vbegin + 5;
+	move_and_print(v.begin(), 5, v.end());
+	move_and_print(m.begin(), 5, m.end());
+	recurse(u.begin(), u.end());
+	recurse(v.begin(), v.end());
+	recurse(m.begin(), m.end());
+	return 0;
+}
+
+```
+
 ## Algorithms
 In this section we explore a few algorithms provided by the STL.
 
