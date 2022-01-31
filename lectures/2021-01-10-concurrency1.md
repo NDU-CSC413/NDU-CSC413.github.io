@@ -24,8 +24,8 @@ int main()
 ```
 
 Thread execution starts at the __entry__ or __top level__ function passed as an argument to the thread object constructor. In the example above the __entry__ or __top level__ function is ```hello()```. 
-Since the return value of the __top level__ function is ignore it is usually returns void. 
-The Note that the program now has __two__ threads, the initial one running ```main()``` and the one we have created. The call to ```join()``` is important, otherwise the main thread could finish before the thread ```t```.
+Since the return value of the __top level__ function is ignored, it  usually returns void. 
+Note that the program now has __two__ threads, the initial one running ```main()``` and the one we have created. The call to ```join()``` is important, otherwise the main thread could finish before the thread ```t```.
 Note that we can choose ```detach()``` instead of ```join()```. In this case the thread would continue even after the main thread finished. In either case, we need to choose one of the two options, otherwise when the thread destructor is called it terminates our program. Almost in all use cases we use ```join()```.
 
 
@@ -606,6 +606,7 @@ The reason is that when we don't print (i.e. not use) the variable result the co
 
 ![Figure 2](figs/asm1.jpg)
 ![Figure 2](/img/asm1.jpg)
+
 Figure 1  shows the assembly output when the last line __is not included__. Note the absence of instructions between the two calls to ```now()```.
 
 
