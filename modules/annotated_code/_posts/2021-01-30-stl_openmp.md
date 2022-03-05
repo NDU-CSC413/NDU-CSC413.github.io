@@ -305,6 +305,7 @@ Rather than padding with the added complexity of alignment it is easier and almo
   
   ```
  2. On Unix/Linux  with GNU C++:
+ 
  ```
  c++ -fopenmp -DX file_sharing.cpp
  
